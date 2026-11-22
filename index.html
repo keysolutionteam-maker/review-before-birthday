@@ -1,0 +1,1560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Weekly birthday policy reviews, WhatsApp invitations, reminders, birthday cards and KST review PDFs.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Review Before Birthday</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Dancing+Script:wght@700&family=Noto+Serif+SC:wght@500;700&display=swap">
+<style>
+/* Layout: one phone-width column of action cards, grouped by what to do this week; summary chips on top. */
+:root{
+  --bg:#f3f5fa; --surface:#ffffff; --ink:#14213d; --muted:#586179; --line:#dde2ec;
+  --accent:#1f4fd6; --accent-ink:#ffffff; --accent-soft:#e6ecff;
+  --ok:#137347; --ok-soft:#e0f3e8; --warn:#9a5600; --warn-soft:#fff0d2; --bad:#b42318; --bad-soft:#fde6e2;
+  --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1320; --surface:#151d2e; --ink:#e7ecf6; --muted:#9ba6bd; --line:#27314a;
+  --accent:#86a4ff; --accent-ink:#0b1020; --accent-soft:#1c2950;
+  --ok:#55c891; --ok-soft:#11301f; --warn:#f2b65a; --warn-soft:#38290e; --bad:#ff8b7b; --bad-soft:#3c1813; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1320; --surface:#151d2e; --ink:#e7ecf6; --muted:#9ba6bd; --line:#27314a;
+  --accent:#86a4ff; --accent-ink:#0b1020; --accent-soft:#1c2950;
+  --ok:#55c891; --ok-soft:#11301f; --warn:#f2b65a; --warn-soft:#38290e; --bad:#ff8b7b; --bad-soft:#3c1813; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header.top{padding-top:18px;display:flex;flex-direction:column;gap:10px}
+.brand{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:26px;line-height:1.2;margin:0;text-wrap:balance;font-weight:800}
+h2{font-size:17px;margin:0;display:flex;align-items:center;gap:8px;text-wrap:balance}
+h2 .n{font-size:13px;font-weight:700;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:1px 9px}
+.sub{color:var(--muted);margin:0;font-size:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:600;font-size:14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary,.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.wa,.btn.wa{background:var(--ok);color:var(--surface);border-color:var(--ok)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column}
+.chip b{font-size:22px;font-variant-numeric:tabular-nums;line-height:1.1}
+.chip span{font-size:12px;color:var(--muted)}
+.chip.hot b{color:var(--accent)} .chip.warnc b{color:var(--warn)}
+.banner{border-radius:var(--r);padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:8px}
+.banner.demo{background:var(--warn-soft);color:var(--ink);border:1px solid var(--warn)}
+.banner.info{background:var(--accent-soft)}
+.banner.err{background:var(--bad-soft);border:1px solid var(--bad)}
+section{display:flex;flex-direction:column;gap:10px;scroll-margin-top:12px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card .name{font-weight:700;font-size:16px}
+.meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.pill{font-size:12px;font-weight:700;border-radius:99px;padding:2px 9px;white-space:nowrap}
+.pill.late{background:var(--bad-soft);color:var(--bad)} .pill.due{background:var(--accent-soft);color:var(--accent)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.flag{font-size:13px;background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:6px 10px}
+.flag.bad{background:var(--bad-soft)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-height:34px;padding:6px 12px;background:var(--surface);color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+textarea{width:100%;font:inherit;font-size:14px;line-height:1.45;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink);resize:vertical;min-height:150px}
+input,select{font:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface);color:var(--ink);min-height:40px;max-width:100%}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);flex:1 1 130px;min-width:0}
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.list .li{padding:10px 14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.list .li:first-child{border-top:0}
+.list .li .r{color:var(--muted);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.empty{color:var(--muted);font-size:14px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:12px 14px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+details summary{cursor:pointer;font-weight:700}
+details ol,details ul{padding-left:20px;margin:8px 0 0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.sheet-bg{position:fixed;inset:0;background:rgba(5,10,25,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:640px;max-height:90vh;overflow:auto;border-radius:16px 16px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px}
+.sheet h3{margin:0;font-size:18px}
+.msgbox{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.grid2 input{width:100%}
+.sheet h4{margin:8px 0 0;font-size:15px}
+.maprow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:8px;align-items:center;font-size:14px}
+.maprow select{width:100%}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:30;font-size:14px;max-width:calc(100% - 32px)}
+.mono{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">KST | Key Solutions Team</div>
+    <h1>Review Before Birthday</h1>
+    <p class="sub" id="weekline">This week</p>
+    <div class="row">
+      <label class="btn primary" for="file">Import client list</label>
+      <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+      <button id="pdfBtn" type="button">Download this week's PDF</button>
+      <button id="shareBtn" class="wa" type="button" data-act="shareApp">Share on WhatsApp</button>
+      <button id="helpBtn" class="ghost" type="button">How it works</button>
+    </div>
+  </header>
+  <div id="banner"></div>
+  <nav class="chips" id="chips" aria-label="This week at a glance"></nav>
+  <main id="main" class="wrap" style="gap:22px"></main>
+  <details id="help">
+    <summary>How it works</summary>
+    <ol>
+      <li><b>Every Monday:</b> export your client and policy list from the company system as Excel (.xlsx) or CSV, then tap <b>Import client list</b>.</li>
+      <li>Check the column matching once. The app remembers it for next week.</li>
+      <li><b>To review and invite:</b> clients whose birthday is about 2 months away. Look over their policies, choose English or Malay, edit the message if you like, then tap <b>Send on WhatsApp</b>. You press Send in WhatsApp yourself, then tell the app you sent it.</li>
+      <li>When the client replies, enter the appointment date and time. The app lines up a reminder for <b>3 days before</b>.</li>
+      <li><b>Reminders to send:</b> send these on the day shown. After the meeting, tap <b>Mark review done</b>.</li>
+      <li><b>Needs checking:</b> clients with a missing or conflicting birth date, IC or phone. The app never guesses these. Fix them in the company system and re-import.</li>
+      <li><b>Download this week's PDF</b> for the weekly list, plus the KST review pack for each client: Total Protection Planning Record 全方面保障记录, 全方面保障计划, Wealth Protection (5 Fingers) and 资产/负债/现金流. Their name, policies, year issued, premiums and beneficiaries are filled in. The coverage boxes are left for you to fill in at the meeting.</li>
+    </ol>
+    <p class="hint" id="privacyNote" style="margin-top:10px">Your client list stays in this browser on this device. Only your progress (invited, appointment, reminder sent) is saved to your account, under a coded ID with no names.</p>
+  </details>
+</div>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<script id="core">
+/* Core logic: no DOM. Also run by the test harness in Node. */
+(function (G) {
+  'use strict';
+  var MON_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MON3 = MON_EN.map(function (m) { return m.slice(0, 3); });
+  var DAY_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MON_BM = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+  var DAY_BM = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+
+  function p2(n) { return String(n).padStart(2, '0'); }
+  function D(y, m, d) { return new Date(y, m - 1, d, 12, 0, 0, 0); }
+  function daysIn(y, m) { return new Date(y, m, 0).getDate(); }
+  function iso(dt) { return dt.getFullYear() + '-' + p2(dt.getMonth() + 1) + '-' + p2(dt.getDate()); }
+  function fromIso(s) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? D(+m[1], +m[2], +m[3]) : null; }
+  function day0(dt) { return D(dt.getFullYear(), dt.getMonth() + 1, dt.getDate()); }
+  function addDays(dt, n) { var r = new Date(dt.getTime()); r.setDate(r.getDate() + n); return day0(r); }
+  function addMonths(dt, n) {
+    var y = dt.getFullYear(), m = dt.getMonth() + 1 + n;
+    while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; }
+    return D(y, m, Math.min(dt.getDate(), daysIn(y, m)));
+  }
+  function diffDays(a, b) { return Math.round((day0(b) - day0(a)) / 864e5); }
+  function validYMD(y, m, d) { return y >= 1900 && y <= 2100 && m >= 1 && m <= 12 && d >= 1 && d <= daysIn(y, m); }
+  function fmtLong(dt) { return dt.getDate() + ' ' + MON3[dt.getMonth()] + ' ' + dt.getFullYear(); }
+  function fmtDay(dt) { return DAY_EN[dt.getDay()].slice(0, 3) + ' ' + dt.getDate() + ' ' + MON3[dt.getMonth()]; }
+  function fmtRange(a, b) {
+    return a.getMonth() === b.getMonth() ? a.getDate() + '–' + b.getDate() + ' ' + MON3[b.getMonth()] + ' ' + b.getFullYear()
+      : a.getDate() + ' ' + MON3[a.getMonth()] + ' – ' + b.getDate() + ' ' + MON3[b.getMonth()] + ' ' + b.getFullYear();
+  }
+  function monIdx(s) {
+    var k = String(s).toLowerCase().slice(0, 3);
+    var map = { jan:0, feb:1, mar:2, mac:2, apr:3, may:4, mei:4, jun:5, jul:6, aug:7, ogo:7, sep:8, oct:9, okt:9, nov:10, dec:11, dis:11 };
+    return k in map ? map[k] : -1;
+  }
+  function chk(y, m, d, s) { return validYMD(y, m, d) ? { date: D(y, m, d) } : { err: '"' + s + '" is not a real date' }; }
+
+  /* Reads a birth date. fmt: 'DMY' (Malaysian default) or 'MDY'. Never guesses a 2-digit year. */
+  function parseDate(v, fmt) {
+    if (v == null) return { empty: true };
+    if (v instanceof Date && !isNaN(v)) return { date: D(v.getFullYear(), v.getMonth() + 1, v.getDate()) };
+    if (typeof v === 'number') {
+      if (v >= 19000101 && v <= 21001231) { var y8 = Math.floor(v / 1e4), m8 = Math.floor(v / 100) % 100, d8 = v % 100; if (validYMD(y8, m8, d8)) return { date: D(y8, m8, d8) }; }
+      if (v > 0 && v < 80000) { var t = new Date(Date.UTC(1899, 11, 30) + Math.floor(v) * 864e5); return { date: D(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate()) }; }
+      return { err: 'can’t read "' + v + '" as a date' };
+    }
+    var s = String(v).trim(); if (!s) return { empty: true };
+    s = s.replace(/[T\s]+\d{1,2}:\d{2}(:\d{2})?(\.\d+)?\s*(am|pm|Z)?$/i, '');
+    var m;
+    if ((m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/.exec(s))) return chk(+m[1], +m[2], +m[3], s);
+    if ((m = /^(\d{4})(\d{2})(\d{2})$/.exec(s))) return chk(+m[1], +m[2], +m[3], s);
+    if ((m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2}|\d{4})$/.exec(s))) {
+      if (m[3].length === 2) return { err: '"' + s + '" has a 2-digit year, so the century is unclear' };
+      return fmt === 'MDY' ? chk(+m[3], +m[1], +m[2], s) : chk(+m[3], +m[2], +m[1], s);
+    }
+    if ((m = /^(\d{1,2})[\s\-\/]+([A-Za-z]{3,})\.?[\s\-\/,]+(\d{4})$/.exec(s))) { var a = monIdx(m[2]); return a < 0 ? { err: 'can’t read "' + s + '"' } : chk(+m[3], a + 1, +m[1], s); }
+    if ((m = /^([A-Za-z]{3,})\.?\s+(\d{1,2}),?\s+(\d{4})$/.exec(s))) { var b = monIdx(m[1]); return b < 0 ? { err: 'can’t read "' + s + '"' } : chk(+m[3], b + 1, +m[2], s); }
+    return { err: 'can’t read "' + s + '" as a date' };
+  }
+
+  /* Looks at a whole column to tell DD/MM from MM/DD. */
+  function detectFormat(values) {
+    var dmy = 0, mdy = 0, n = 0;
+    values.forEach(function (v) {
+      if (typeof v !== 'string') return;
+      var m = /^\s*(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/.exec(v); if (!m) return;
+      n++; if (+m[1] > 12) dmy++; if (+m[2] > 12) mdy++;
+    });
+    return { fmt: mdy > dmy ? 'MDY' : 'DMY', dmy: dmy, mdy: mdy, slashDates: n, mixed: dmy > 0 && mdy > 0 };
+  }
+
+  /* Malaysian NRIC: YYMMDD-PB-###G. Returns the birth date it encodes. */
+  function icInfo(raw, today) {
+    if (raw == null || String(raw).trim() === '') return null;
+    var d = String(raw).replace(/\D/g, '');
+    if (d.length !== 12) return { invalid: true, raw: String(raw).trim() };
+    var yy = +d.slice(0, 2), mm = +d.slice(2, 4), dd = +d.slice(4, 6), cur = today.getFullYear() % 100;
+    var y = (yy > cur ? 1900 : 2000) + yy;
+    if (!validYMD(y, mm, dd)) return { invalid: true, raw: String(raw).trim() };
+    return { digits: d, dob: D(y, mm, dd), masked: '••••••-••-' + d.slice(8) };
+  }
+
+  /* Mobile numbers: Malaysia (60) and Singapore (65). Anything else is flagged, not guessed. */
+  function normPhone(raw) {
+    if (raw == null || String(raw).trim() === '') return { err: 'No mobile number' };
+    var d, note = '';
+    if (typeof raw === 'number') d = String(Math.round(raw));
+    else {
+      var parts = String(raw).split(/[\/,;|]|\s{2,}/).filter(function (x) { return x.replace(/\D/g, '').length >= 7; });
+      if (parts.length > 1) note = 'More than one number listed; using the first';
+      d = (parts[0] || String(raw)).replace(/\D/g, '');
+    }
+    if (d.indexOf('00') === 0) d = d.slice(2);
+    if (d.charAt(0) === '0') d = '6' + d;
+    else if (/^1\d{8,9}$/.test(d)) d = '60' + d;
+    if (/^601\d{8,9}$/.test(d)) return { wa: d, pretty: '+60 ' + d.slice(2, 4) + '-' + d.slice(4, 7) + ' ' + d.slice(7), note: note };
+    if (/^65[89]\d{7}$/.test(d)) return { wa: d, pretty: '+65 ' + d.slice(2, 6) + ' ' + d.slice(6), note: note };
+    if (/^60[3-9]\d{7,8}$/.test(d)) return { err: 'Looks like a landline (' + String(raw).trim() + '), not a mobile for WhatsApp' };
+    return { err: 'Can’t read mobile number "' + String(raw).trim() + '"' };
+  }
+
+  function parseMoney(v) {
+    if (v == null || v === '') return null;
+    if (typeof v === 'number') return v;
+    var s = String(v).replace(/RM|MYR|,|\s/gi, '');
+    return /^-?\d+(\.\d+)?$/.test(s) ? parseFloat(s) : null;
+  }
+  function modeInfo(v) {
+    var s = String(v == null ? '' : v).trim().toLowerCase();
+    if (!s) return { f: null, label: '' };
+    if (/^(m|mly|monthly|month|bulanan|12)$/.test(s)) return { f: 12, label: 'Monthly' };
+    if (/^(q|qly|quarterly|quarter|suku tahunan|4)$/.test(s)) return { f: 4, label: 'Quarterly' };
+    if (/^(h|hy|half[ -]?yearly|semi[ -]?annual(ly)?|half[ -]?year|setengah tahun|2)$/.test(s)) return { f: 2, label: 'Half-yearly' };
+    if (/^(a|y|yly|annual|annually|yearly|year|tahunan|1)$/.test(s)) return { f: 1, label: 'Yearly' };
+    if (/^(s|sp|single|single premium|tunggal)$/.test(s)) return { f: 0, label: 'Single' };
+    return { f: null, label: String(v).trim() };
+  }
+  function money(n) {
+    if (n == null || isNaN(n)) return '';
+    var s = Math.abs(n).toFixed(2).split('.');
+    return (n < 0 ? '-' : '') + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + s[1];
+  }
+  function titleCase(name) {
+    var s = String(name || '').trim().replace(/\s+/g, ' ');
+    if (s !== s.toUpperCase()) return s;
+    return s.toLowerCase().split(' ').map(function (w) {
+      if (/^(bin|binti|bt|bte|a\/l|a\/p|al|ap|van|de)$/.test(w)) return w;
+      return w.replace(/(^|[-'])(\p{L})/gu, function (_, a, b) { return a + b.toUpperCase(); });
+    }).join(' ');
+  }
+  function cyrb53(str) {
+    var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (var i = 0, ch; i < str.length; i++) { ch = str.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+  }
+
+  var FIELDS = [
+    { k: 'name', label: 'Client name', req: true, syn: ['client name','policyholder name','policy holder name','policyholder','policy holder','owner name','life assured name','life assured','customer name','insured name','proposer name','name','nama'] },
+    { k: 'callName', label: 'Name to use in messages', syn: ['preferred name','nickname','call name','salutation'] },
+    { k: 'dob', label: 'Date of birth', syn: ['date of birth','dob','birth date','birthdate','tarikh lahir','birthday','policyholder dob','owner dob'] },
+    { k: 'ic', label: 'NRIC / ID number', syn: ['nric no','nric','new ic','new ic no','ic no','ic number','ic','id no','id number','mykad','identity no','owner nric','policyholder nric'] },
+    { k: 'phone', label: 'Mobile number', syn: ['mobile no','mobile number','mobile','handphone','hp no','hp','phone','phone no','contact no','contact number','tel','telephone','no tel'] },
+    { k: 'lang', label: 'Preferred language (EN/BM)', syn: ['language','preferred language','lang','bahasa'] },
+    { k: 'policyNo', label: 'Policy number', syn: ['policy no','policy number','policy num','contract no','certificate no','no polisi','policy'] },
+    { k: 'plan', label: 'Plan / product name', syn: ['plan name','product name','basic plan','plan','product','pelan'] },
+    { k: 'status', label: 'Policy status', syn: ['policy status','status','contract status'] },
+    { k: 'start', label: 'Start date', syn: ['commencement date','commencement','start date','issue date','inception date','risk commencement date','effective date'] },
+    { k: 'sum', label: 'Sum assured (RM)', syn: ['sum assured','basic sum assured','sum insured','sa','coverage amount','face amount'] },
+    { k: 'premium', label: 'Premium (RM)', syn: ['modal premium','premium amount','installment premium','total premium','premium','premium rm'] },
+    { k: 'mode', label: 'Payment frequency', syn: ['payment mode','premium mode','payment frequency','billing mode','mode','frequency'] },
+    { k: 'riders', label: 'Riders / notes', syn: ['riders','rider','supplementary','remarks','notes'] },
+    { k: 'maturity', label: 'Maturity / expiry date', syn: ['maturity date','expiry date','maturity','expiry','end date','term end'] },
+    { k: 'beneficiary', label: 'Beneficiary / nominee', syn: ['beneficiary','beneficiaries','nominee','nominees','beneficiary name','nominee name'] }
+  ];
+  function yearOf(v, fmt) {
+    var p = parseDate(v, fmt); if (p.date) return String(p.date.getFullYear());
+    var m = /\b(19|20)\d{2}\b/.exec(String(v == null ? '' : v)); return m ? m[0] : '';
+  }
+  function normH(h) { return String(h == null ? '' : h).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function synScore(header, syn) {
+    var h = normH(header); if (!h) return 0;
+    var s = normH(syn);
+    if (h === s) return 3;
+    return (' ' + h + ' ').indexOf(' ' + s + ' ') >= 0 ? 2 : 0;
+  }
+  function guessMapping(headers) {
+    var cands = [];
+    FIELDS.forEach(function (f) {
+      headers.forEach(function (h, i) {
+        var best = 0, len = 0;
+        f.syn.forEach(function (s) { var sc = synScore(h, s); if (sc > best || (sc === best && sc > 0 && s.length > len)) { best = sc; len = s.length; } });
+        if (best) cands.push({ k: f.k, i: i, sc: best, len: len });
+      });
+    });
+    cands.sort(function (a, b) { return b.sc - a.sc || b.len - a.len; });
+    var map = {}, used = {};
+    cands.forEach(function (c) { if (map[c.k] == null && !used[c.i]) { map[c.k] = c.i; used[c.i] = 1; } });
+    FIELDS.forEach(function (f) { if (map[f.k] == null) map[f.k] = -1; });
+    return map;
+  }
+  /* Company exports often start with title rows; find the real header row. */
+  function findHeaderRow(aoa) {
+    var best = 0, bestScore = -1;
+    for (var r = 0; r < Math.min(15, aoa.length); r++) {
+      var sc = 0;
+      (aoa[r] || []).forEach(function (cell) { FIELDS.some(function (f) { return f.syn.some(function (s) { return synScore(cell, s) > 0; }); }) && sc++; });
+      if (sc > bestScore) { bestScore = sc; best = r; }
+    }
+    return best;
+  }
+  function langOf(v) {
+    var s = String(v == null ? '' : v).trim().toLowerCase();
+    if (/^(bm|ms|my|malay|bahasa|bahasa melayu|melayu|b)$/.test(s)) return 'bm';
+    if (/^(en|eng|english|e)$/.test(s)) return 'en';
+    return null;
+  }
+  function cell(row, i) { if (i == null || i < 0) return ''; var v = row[i]; return v == null ? '' : v; }
+  function str(v) { return String(v == null ? '' : v).trim(); }
+
+  /* Turns export rows into one record per client with all their policies. Problems are listed, never guessed. */
+  function buildClients(aoa, headerIdx, map, fmt, today) {
+    var byKey = {}, order = [], rowIssues = [], rows = 0;
+    for (var r = headerIdx + 1; r < aoa.length; r++) {
+      var row = aoa[r] || [];
+      if (!row.some(function (c) { return str(c) !== ''; })) continue;
+      rows++;
+      var rowNo = r + 1;
+      var name = str(cell(row, map.name));
+      if (!name) { rowIssues.push({ row: rowNo, issue: 'No client name on this row' + (str(cell(row, map.policyNo)) ? ' (policy ' + str(cell(row, map.policyNo)) + ')' : '') + '. Skipped.' }); continue; }
+      var dobRaw = cell(row, map.dob), icRaw = cell(row, map.ic);
+      var dobP = map.dob >= 0 ? parseDate(dobRaw, fmt) : { empty: true };
+      var ic = map.ic >= 0 ? icInfo(icRaw, today) : null;
+      var rawKey = ic && ic.digits ? 'ic:' + ic.digits : 'n:' + name.toLowerCase().replace(/\s+/g, ' ') + '|' + (dobP.date ? iso(dobP.date) : str(dobRaw));
+      var c = byKey[rawKey];
+      if (!c) {
+        c = byKey[rawKey] = { key: 'c' + cyrb53(rawKey), name: titleCase(name), callName: str(cell(row, map.callName)), ic: ic, dobP: dobP, dobRaw: str(dobRaw),
+          phoneRaw: cell(row, map.phone), lang: langOf(cell(row, map.lang)), policies: [], issues: [], notes: [], rows: [], bens: [] };
+        order.push(rawKey);
+      } else {
+        if (dobP.date && c.dobP.date && iso(dobP.date) !== iso(c.dobP.date)) c.issues.push('Rows ' + c.rows[0] + ' and ' + rowNo + ' give different birth dates');
+        if (!c.dobP.date && dobP.date) c.dobP = dobP;
+        var ph = cell(row, map.phone);
+        if (str(c.phoneRaw) === '' && str(ph) !== '') c.phoneRaw = ph;
+        else if (str(ph) !== '' && String(ph).replace(/\D/g, '') !== String(c.phoneRaw).replace(/\D/g, '')) c.notes.push('Row ' + rowNo + ' lists another number: ' + str(ph));
+        if (!c.lang) c.lang = langOf(cell(row, map.lang));
+      }
+      c.rows.push(rowNo);
+      var prem = parseMoney(cell(row, map.premium)), md = modeInfo(cell(row, map.mode));
+      var stP = map.start >= 0 ? parseDate(cell(row, map.start), fmt) : { empty: true };
+      c.policies.push({ policyNo: str(cell(row, map.policyNo)), plan: str(cell(row, map.plan)), status: str(cell(row, map.status)),
+        start: stP.date ? fmtLong(stP.date) : str(cell(row, map.start)), sum: parseMoney(cell(row, map.sum)), sumRaw: str(cell(row, map.sum)),
+        premium: prem, premiumRaw: str(cell(row, map.premium)), mode: md.label, perYear: prem != null && md.f != null ? prem * md.f : null,
+        riders: str(cell(row, map.riders)), startYear: map.start >= 0 ? yearOf(cell(row, map.start), fmt) : '',
+        maturityYear: map.maturity >= 0 ? yearOf(cell(row, map.maturity), fmt) : '' });
+      str(cell(row, map.beneficiary)).split(/[;\/\n]|,\s*(?=[A-Za-z])/).forEach(function (b) { b = b.trim(); if (b && c.bens.indexOf(b) < 0) c.bens.push(b); });
+    }
+    var clients = order.map(function (k) {
+      var c = byKey[k], blocking = [];
+      var icDob = c.ic && c.ic.dob ? c.ic.dob : null;
+      if (c.ic && c.ic.invalid) c.notes.push('ID "' + c.ic.raw + '" is not a 12-digit NRIC, so it can’t confirm the birth date');
+      if (c.dobP.err) blocking.push('Birth date ' + c.dobP.err);
+      var dob = c.dobP.date || null, src = 'export';
+      if (dob && icDob && iso(dob) !== iso(icDob)) { blocking.push('Birth date ' + fmtLong(dob) + ' doesn’t match the IC (' + fmtLong(icDob) + ')'); }
+      if (!dob && icDob && !c.dobP.err) { dob = icDob; src = 'IC'; }
+      if (!dob && !c.dobP.err) blocking.push('No birth date, and no valid NRIC to read it from');
+      if (dob && (dob > today || today.getFullYear() - dob.getFullYear() > 110)) blocking.push('Birth date ' + fmtLong(dob) + ' looks wrong');
+      blocking = blocking.concat(c.issues);
+      var ph = normPhone(c.phoneRaw);
+      if (ph.note) c.notes.push(ph.note);
+      var unknownModes = c.policies.filter(function (p) { return p.premium != null && p.perYear == null && p.mode !== 'Single'; });
+      var perYear = c.policies.reduce(function (s, p) { return s + (p.perYear || 0); }, 0);
+      return { key: c.key, name: c.name, callName: c.callName, icMasked: c.ic && c.ic.masked ? c.ic.masked : '', dob: dob, dobSrc: src,
+        phone: ph.wa ? ph : null, phoneErr: ph.err || '', lang: c.lang, policies: c.policies, perYear: perYear, premiumGaps: unknownModes.length,
+        blocking: blocking, notes: c.notes, rows: c.rows, beneficiaries: c.bens.map(titleCase) };
+    });
+    return { clients: clients, rowIssues: rowIssues, rows: rows };
+  }
+
+  /* Reviews start this many months before the birthday. */
+  var REVIEW_MONTHS = 2;
+  function nextBirthday(dob, today) {
+    var y = today.getFullYear();
+    function on(yr) { return D(yr, dob.getMonth() + 1, Math.min(dob.getDate(), daysIn(yr, dob.getMonth() + 1))); }
+    var b = on(y); if (b < day0(today)) b = on(y + 1); return b;
+  }
+
+  /* The weekly plan. statuses: { key: {cycle, invitedOn, appt, apptPlace, remindedOn, reviewedOn, skip, lang} } */
+  function weeklyPlan(clients, statuses, today) {
+    today = day0(today);
+    var weekEnd = addDays(today, 6), horizon = addDays(today, 35);
+    var out = { today: today, weekEnd: weekEnd, toInvite: [], invited: [], booked: [], reminders: [], comingUp: [], done: [], needsCheck: [], phoneIssues: [], birthdays: [] };
+    clients.forEach(function (c) {
+      if (c.blocking.length) { out.needsCheck.push({ client: c, issues: c.blocking }); return; }
+      var bday = nextBirthday(c.dob, today), cycle = iso(bday), st = statuses[c.key];
+      if (bday <= weekEnd) out.birthdays.push({ client: c, bday: bday, cycle: cycle, turning: bday.getFullYear() - c.dob.getFullYear(),
+        daysToBday: diffDays(today, bday), st: st || {}, lang: (st && st.lang) || c.lang || 'en', cardSent: !!(st && st.cardFor === cycle) });
+      var use = null;
+      if (st && st.cycle) {
+        var cd = fromIso(st.cycle), ad = st.appt ? fromIso(st.appt) : null;
+        if (st.cycle === cycle) use = st;
+        else if (ad && !st.reviewedOn && !st.skip && ad >= addDays(today, -7)) use = st;
+        else if (st.invitedOn && !st.appt && cd && today <= addDays(cd, 14)) use = st;
+      }
+      if (use) { bday = fromIso(use.cycle); cycle = use.cycle; }
+      var s = use || {};
+      var item = { client: c, bday: bday, cycle: cycle, review: addMonths(bday, -REVIEW_MONTHS), turning: bday.getFullYear() - c.dob.getFullYear(),
+        daysToBday: diffDays(today, bday), st: s, lang: s.lang || c.lang || 'en' };
+      if (s.reviewedOn || s.skip) { out.done.push(item); return; }
+      if (s.appt) {
+        var ad2 = fromIso(s.appt); item.apptDate = ad2; item.apptTime = (s.appt.split('T')[1] || '').slice(0, 5); item.sendOn = addDays(ad2, -3);
+        item.apptPast = ad2 < today;
+        out.booked.push(item);
+        if (!s.remindedOn && !item.apptPast && item.sendOn <= weekEnd) out.reminders.push(item);
+      } else if (s.invitedOn) { item.invitedOn = fromIso(s.invitedOn); out.invited.push(item); }
+      else if (item.review <= weekEnd) { item.late = item.review < today; out.toInvite.push(item); }
+      else if (item.review <= horizon) out.comingUp.push(item);
+      if (c.phoneErr && (item.review <= weekEnd || s.appt || s.invitedOn)) out.phoneIssues.push(item);
+    });
+    var by = function (f) { return function (a, b) { return f(a) - f(b); }; };
+    out.toInvite.sort(by(function (i) { return i.review; }));
+    out.invited.sort(by(function (i) { return i.bday; }));
+    out.booked.sort(by(function (i) { return i.apptDate; }));
+    out.reminders.sort(by(function (i) { return i.sendOn; }));
+    out.comingUp.sort(by(function (i) { return i.review; }));
+    out.birthdays.sort(by(function (i) { return i.bday; }));
+    return out;
+  }
+
+  function firstName(item) { return item.client.callName || item.client.name; }
+  function fmtTime(t, lang) {
+    if (!t) return '';
+    var h = +t.split(':')[0], mi = t.split(':')[1] || '00', h12 = h % 12 || 12;
+    if (lang === 'bm') { var part = h < 12 ? 'pagi' : h < 14 ? 'tengah hari' : h < 19 ? 'petang' : 'malam'; return h12 + ':' + mi + ' ' + part; }
+    return h12 + ':' + mi + (h < 12 ? 'am' : 'pm');
+  }
+  function dateWords(dt, lang, withDay) {
+    if (lang === 'bm') return (withDay ? DAY_BM[dt.getDay()] + ', ' : '') + dt.getDate() + ' ' + MON_BM[dt.getMonth()];
+    return (withDay ? DAY_EN[dt.getDay()] + ', ' : '') + dt.getDate() + ' ' + MON_EN[dt.getMonth()];
+  }
+  function inviteMsg(item, lang) {
+    var n = item.client.policies.length, nm = firstName(item), bd = dateWords(item.bday, lang, false);
+    if (lang === 'bm') {
+      return 'Hai ' + nm + ', saya KS Tan dari Great Eastern 😊\n\n' +
+        'Hari jadi anda pada ' + bd + ' tidak lama lagi. Ini masa yang sesuai untuk semakan polisi tahunan anda.\n\n' +
+        'Saya akan semak ' + (n > 1 ? n + ' polisi anda' : 'polisi anda') + ' bersama anda: perlindungan, premium, dan sama ada ada apa-apa yang perlu dikemas kini untuk tahun ini. Lebih kurang 30 minit sahaja, boleh berjumpa atau melalui panggilan video.\n\n' +
+        'Hari apa yang sesuai untuk anda dalam dua minggu ini?';
+    }
+    return 'Hi ' + nm + ', this is KS Tan from Great Eastern 😊\n\n' +
+      'Your birthday is coming up on ' + bd + ', so it’s a good time for your yearly policy review.\n\n' +
+      'I’ll go through ' + (n > 1 ? 'your ' + n + ' policies' : 'your policy') + ' with you: your cover, your premiums, and whether anything needs updating for this year. It takes about 30 minutes, in person or by video call.\n\n' +
+      'Which day in the next two weeks works for you?';
+  }
+  function reminderMsg(item, lang) {
+    var nm = firstName(item), when = dateWords(item.apptDate, lang, true), t = fmtTime(item.apptTime, lang), place = (item.st.apptPlace || '').trim();
+    if (lang === 'bm') {
+      return 'Hai ' + nm + ', ini peringatan untuk sesi semakan polisi kita pada ' + when + (t ? ', jam ' + t : '') + (place ? ' di ' + place : '') + '.\n\n' +
+        'Jika ada bil hospital baharu atau perubahan dalam hidup (kerja baharu, ahli keluarga baharu, pinjaman baharu), boleh bawa atau beritahu saya. Kita semak perlindungan anda bersama.\n\n' +
+        'Balas OK untuk sahkan, atau beritahu saya jika perlu tukar masa 😊';
+    }
+    return 'Hi ' + nm + ', a quick reminder of our policy review on ' + when + (t ? ' at ' + t : '') + (place ? ' at ' + place : '') + '.\n\n' +
+      'If you’ve had any new hospital bills or life changes (new job, new family member, new loan), bring them along or let me know. We’ll check your cover together.\n\n' +
+      'Reply OK to confirm, or tell me if you need another time 😊';
+  }
+
+  /* PDF: weekly list, then for each client to invite or meet this week the KST review pack,
+     laid out like the team template (Total Protection Planning Record, 全方面保障计划, Wealth Protection, 资产/负债/现金流). */
+  var MODE_LETTER = { 'Monthly': 'M', 'Quarterly': 'Q', 'Half-yearly': 'H', 'Yearly': 'Y', 'Single': 'S' };
+
+  /* Review worksheet: the fields of the KST template, filled in at the meeting. [key, template column (-1 = beside the table), label] */
+  var COV = [['lifeSave', 4, '人寿 · 储蓄 Saving'], ['lifeDisease', 5, '人寿 · 疾病 Disease'], ['endow', 6, 'Endowment · 教育/公基金'], ['ilp', 7, 'Invest-link · 人寿'],
+    ['accDeath', 8, '意外 · 死亡'], ['accTpd', 9, '意外 · 终生残废'], ['accWeekly', 10, '意外 · 每周赔偿'], ['accMed', 11, '意外 · 医药'],
+    ['hsRoom', 12, '医药 · 住院费'], ['hsSurg', 13, '医药 · 手术费'], ['hsTotal', 14, '医药 · 总保费'],
+    ['rDisease', 15, '附加 · 疾病'], ['rPayor', 16, '附加 · 付款人'], ['rLady', 17, '附加 · 女性保'], ['rTpd', 18, '附加 · 延续终身残废'],
+    ['other', 19, '其他 Other'], ['maturity', 23, '年满期 Year of maturity'], ['payDate', 24, '支付日期 Date of payment'], ['outstanding', -1, 'Value outstanding']];
+  var PLAN_FIELDS = [['life', '1. 人寿', [['life_protect', '保障'], ['life_disab', '残废时的生活费（每年）']]],
+    ['ci', '2. 疾病', [['ci_smcc', '生活费（SMCC 188种初，中，末期）保值'], ['ci_50_val', '生活费（50种严重疾病）保值'], ['ci_50_add', '生活费（50种严重疾病）增值'], ['ci_early', '精明早期保障（受控制）保值'], ['ci_cancer', '癌症保单']]],
+    ['acc', '3. 意外', [['acc_death', '意外死亡或残障'], ['acc_med', '医药费'], ['acc_income', '收入代替（每月）']]],
+    ['med', '4. 医药卡', [['med_room', '医药卡（病房/天）'], ['med_annual', '年限额'], ['med_life', '终生限额'], ['med_daily', '住院津贴（一天）']]]];
+  /* [key, label, min years of income, max years of income, guide] */
+  var FINGERS = [['death', '01 Death & TPD 死亡 残废', 10, 10, '年收入的10倍 · 10× annual income'], ['ci', '02 Critical Illness 疾病', 3, 5, '3–5年的收入替代 · 3–5 years of income'],
+    ['eci', '03 Early Critical Illness 初期疾病', 1, 2, '1–2年的收入替代 · 1–2 years of income'], ['acc', '04 Accident 意外', 0, 0, '根据生活方式 · based on lifestyle'], ['hosp', '05 Hospitalisation 住院', 0, 0, '私人或者政府医院 · private or government hospital']];
+  var CASH = [['food', '食物'], ['transport', '交通'], ['bills', '账单'], ['insurance', '保险'], ['allowance', '定期补贴'], ['fun', '娱乐'], ['misc', '杂费']];
+  var ALLOC = [['short', '短期 (<1 year)'], ['mid', '中期 (2–10 years)'], ['long', '长期 (>10 years)']];
+  function policyKey(p, k) { return p.policyNo || 'p' + k; }
+  /* Works out surplus/shortage and cash flow from what was typed. Blank stays blank. */
+  function reviewCalc(rv) {
+    rv = rv || {};
+    var fing = {};
+    FINGERS.forEach(function (fd) { var x = (rv.fing || {})[fd[0]] || {}, cur = parseMoney(x.cur), req = parseMoney(x.req); fing[fd[0]] = { cur: cur, req: req, gap: cur != null && req != null ? cur - req : null }; });
+    var exp = 0, any = false;
+    CASH.forEach(function (cd) { var v = parseMoney((rv.cash || {})[cd[0]]); if (v != null) { exp += v; any = true; } });
+    var inc = parseMoney((rv.cash || {}).income);
+    return { fing: fing, income: inc, expenses: any ? exp : null, surplus: inc != null && any ? inc - exp : null };
+  }
+  /* Amounts typed as numbers print as 12,000; anything else prints as typed. */
+  function amt(v) { if (/^\s*(19|20)\d{2}\s*$/.test(String(v))) return String(v).trim(); var n = parseMoney(v); return n == null ? String(v == null ? '' : v).trim() : money(n).replace(/\.00$/, ''); }
+
+  function makePdf(jsPDF, P, opts) {
+    opts = opts || {};
+    var RV = opts.reviews || {}, PEN = [20, 60, 175], first = !!opts.items;
+    function newPage() { if (first) { first = false; return; } doc.addPage('a4', 'landscape'); }
+    var A = opts.assets || {};
+    if (!A.fontR || !A.fontB) throw new Error('The Chinese font for the review pack is missing.');
+    var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    doc.addFileToVFS('NotoSC-R.ttf', A.fontR); doc.addFont('NotoSC-R.ttf', 'NotoSC', 'normal');
+    doc.addFileToVFS('NotoSC-B.ttf', A.fontB); doc.addFont('NotoSC-B.ttf', 'NotoSC', 'bold');
+    var W = 297, M = 12, INK = [20, 20, 20], MUTED = [95, 100, 115], BLUE = [31, 79, 214], WHITE = [255, 255, 255], LINE = [205, 210, 222], SOFT = [230, 236, 255];
+    var dateStr = opts.dateStr || fmtLong(P.today);
+
+    function f(b, s) { doc.setFont('NotoSC', b ? 'bold' : 'normal'); doc.setFontSize(s); }
+    function rgb(c) { doc.setTextColor(c[0], c[1], c[2]); }
+    /* The Chinese font draws curly quotes full width, so the PDF uses plain ones. */
+    function norm(s) { return String(s == null ? '' : s).replace(/[‘’]/g, "'").replace(/[“”]/g, '"'); }
+    function txt(s, x, y, o) {
+      o = o || {}; f(o.b, o.s || 10); rgb(o.c || INK); s = norm(s);
+      var opt = { align: o.a || 'left', baseline: o.bl || 'alphabetic' };
+      if (o.rm) opt.renderingMode = o.rm;
+      doc.text(String(s), x, y, opt);
+    }
+    function tw(s, b, size) { f(b, size); return doc.getTextWidth(String(s)); }
+    /* Writes text centred (or left/right) in a box, shrinking it to fit the width. */
+    function fit(s, x, y, w, size, o) {
+      o = o || {}; s = norm(s); if (!s) return;
+      var pad = o.pad == null ? 0.8 : o.pad, sz = size, width = tw(s, o.b, size);
+      if (width > w - 2 * pad) { sz = size * (w - 2 * pad) / width; f(o.b, sz); }
+      rgb(o.c || INK);
+      var a = o.a || 'center';
+      doc.text(s, a === 'center' ? x + w / 2 : a === 'left' ? x + pad : x + w - pad, y, { align: a, baseline: 'middle' });
+    }
+    function img(name, x, y, w, h) { var d = A[name]; if (d) doc.addImage(d, d.indexOf('image/png') > 0 ? 'PNG' : 'JPEG', x, y, w, h); }
+    function line(x1, y1, x2, y2, lw, c) { doc.setLineWidth(lw || 0.2); c = c || INK; doc.setDrawColor(c[0], c[1], c[2]); doc.line(x1, y1, x2, y2); }
+    function rect(x, y, w, h, lw, c) { doc.setLineWidth(lw || 0.2); c = c || INK; doc.setDrawColor(c[0], c[1], c[2]); doc.rect(x, y, w, h); }
+    function fill(x, y, w, h, c) { doc.setFillColor(c[0], c[1], c[2]); doc.rect(x, y, w, h, 'F'); }
+    function dashed(x, y, w, h, c) { doc.setLineDashPattern([4, 2.6], 0); rect(x, y, w, h, 1, c); doc.setLineDashPattern([], 0); }
+    function dots(x1, x2, y) { doc.setLineDashPattern([1.4, 1.2], 0); line(x1, y, x2, y, 0.3); doc.setLineDashPattern([], 0); }
+
+    /* ---------- Weekly list ---------- */
+    function table(o) {
+      var base = { margin: { left: M, right: M, top: 16, bottom: 14 }, theme: 'grid',
+        styles: { font: 'NotoSC', fontStyle: 'normal', fontSize: 8.5, cellPadding: 1.6, textColor: [20, 33, 61], lineColor: LINE, lineWidth: 0.2, overflow: 'linebreak' },
+        headStyles: { fillColor: SOFT, textColor: [20, 33, 61], fontStyle: 'bold' },
+        didParseCell: function (d) { d.cell.text = d.cell.text.map(norm); } };
+      for (var k in o) base[k] = o[k];
+      doc.autoTable(base); return doc.lastAutoTable.finalY;
+    }
+    function heading(text, y) { if (y > 178) { doc.addPage('a4', 'landscape'); y = 18; } txt(text, M, y, { b: 1, s: 12, c: [20, 33, 61] }); return y + 2.5; }
+    function none(y, text) { txt(text, M, y + 4, { s: 9, c: MUTED }); return y + 9; }
+    function phone(c) { return c.phone ? c.phone.pretty : 'Missing'; }
+
+    if (!opts.items) {
+    txt('KST | KEY SOLUTIONS TEAM  •  REVIEW BEFORE BIRTHDAY', M, 13, { b: 1, s: 8, c: BLUE });
+    txt('Weekly review list', M, 22, { b: 1, s: 18, c: [20, 33, 61] });
+    txt('Week of ' + fmtRange(P.today, P.weekEnd) + '   •   Generated ' + (opts.generated || dateStr), M, 28.5, { s: 10, c: MUTED });
+    var y = 33;
+    var stats = [['To review & invite', P.toInvite.length], ['Reminders to send', P.reminders.length], ['Waiting for reply', P.invited.length], ['Needs checking', P.needsCheck.length + (opts.rowIssues || []).length]];
+    var bw = (W - 2 * M - 9) / 4;
+    stats.forEach(function (s, i) {
+      var x = M + i * (bw + 3);
+      doc.setFillColor(SOFT[0], SOFT[1], SOFT[2]); doc.roundedRect(x, y, bw, 13, 2, 2, 'F');
+      txt(String(s[1]), x + 3, y + 6.5, { b: 1, s: 14, c: BLUE }); txt(s[0], x + 3, y + 11, { s: 7.5, c: [20, 33, 61] });
+    });
+    y += 21;
+
+    y = heading('1. Review and invite this week (' + P.toInvite.length + ')', y);
+    if (P.toInvite.length) y = table({ startY: y, head: [['Client', 'Turning', 'Birthday', 'Review by', 'Policies', 'Premium / yr (RM)', 'Mobile', 'Note']],
+      body: P.toInvite.map(function (i) { return [i.client.name, String(i.turning), fmtDay(i.bday), fmtDay(i.review), String(i.client.policies.length),
+        (i.client.perYear || !i.client.premiumGaps ? money(i.client.perYear) : 'to confirm') + (i.client.premiumGaps ? ' *' : ''), phone(i.client), (i.late ? 'Late: birthday in ' + i.daysToBday + ' days. ' : '') + (i.client.phoneErr || '')]; }),
+      columnStyles: { 1: { halign: 'center' }, 4: { halign: 'center' }, 5: { halign: 'right' }, 6: { cellWidth: 30 } } }) + 7;
+    else y = none(y, 'Nobody is due this week.');
+
+    y = heading('2. Appointment reminders to send (' + P.reminders.length + ')', y);
+    if (P.reminders.length) y = table({ startY: y, head: [['Client', 'Appointment', 'Place', 'Send reminder on', 'Mobile']],
+      body: P.reminders.map(function (i) { return [i.client.name, fmtDay(i.apptDate) + (i.apptTime ? ', ' + fmtTime(i.apptTime, 'en') : ''), i.st.apptPlace || '',
+        i.sendOn < P.today ? 'Today (appointment is soon)' : fmtDay(i.sendOn), phone(i.client)]; }) }) + 7;
+    else y = none(y, 'No reminders due this week.');
+
+    y = heading('3. Invited, waiting for reply (' + P.invited.length + ')', y);
+    if (P.invited.length) y = table({ startY: y, head: [['Client', 'Invited on', 'Birthday', 'Mobile']],
+      body: P.invited.map(function (i) { return [i.client.name, i.invitedOn ? fmtDay(i.invitedOn) : '', fmtDay(i.bday), phone(i.client)]; }) }) + 7;
+    else y = none(y, 'Nobody is waiting.');
+
+    var checks = P.needsCheck.map(function (n) { return [n.client.name, 'Row ' + n.client.rows.join(', '), n.issues.join('; ')]; })
+      .concat((opts.rowIssues || []).map(function (r) { return ['(no name)', 'Row ' + r.row, r.issue]; }));
+    y = heading('4. Needs checking before they can be scheduled (' + checks.length + ')', y);
+    if (checks.length) y = table({ startY: y, head: [['Client', 'In export', 'What to fix']], body: checks, columnStyles: { 0: { cellWidth: 60 }, 1: { cellWidth: 26 } } }) + 5;
+    else y = none(y, 'Everything looks complete.');
+    if (P.toInvite.some(function (i) { return i.client.premiumGaps; })) none(y, '* Some premiums have a payment frequency the app could not read, so they are not in the yearly total.');
+    }
+
+    /* ---------- Template page 1: Total Protection Planning Record 全方面保障记录 ---------- */
+    var EX = [36, 54, 131, 175, 249, 289, 330, 389, 432, 471, 512, 561, 602, 643, 696, 750, 784, 817, 868, 923, 959, 995, 1049, 1081, 1119, 1165]
+      .map(function (p) { return 10 + (p - 36) * 0.2232; });
+    var HEAD = [
+      [[0, 0, 'No'], [1, 1, "Life Assured's"], [2, 2, "Co'"], [3, 3, 'Policy'], [4, 19, 'TYPE OF PLAN-COVERAGE 保障之范围'], [20, 20, 'Year'], [21, 21, 'Annual'], [22, 22, 'Mode'], [23, 23, 'Year'], [24, 24, 'Dt Of']],
+      [[0, 0, ''], [1, 1, 'Name'], [2, 2, 'NAME'], [3, 3, 'NO.'], [4, 5, 'LIFE'], [6, 6, 'Endowm'], [7, 7, 'INVEST'], [8, 11, 'ACCIDENT'], [12, 14, 'HOSPITAL&SURGICAL'], [15, 18, 'RIDERS/TERMS'], [19, 19, 'Other'], [20, 20, 'Issued'], [21, 21, 'Premium'], [22, 22, 'Of'], [23, 23, 'Of'], [24, 24, 'Payment']],
+      [[0, 0, ''], [1, 1, '姓名'], [2, 2, '保险'], [3, 3, '保单号码'], [4, 5, '人寿'], [6, 6, ''], [7, 7, 'LINK'], [8, 11, '意外'], [12, 14, '医药'], [15, 18, '附加'], [19, 19, '其他'], [20, 20, '年份'], [21, 21, '年总保费'], [22, 22, ''], [23, 23, ''], [24, 24, '日期']],
+      [[0, 0, ''], [1, 1, ''], [2, 2, '公司'], [3, 3, ''], [4, 5, ''], [6, 6, '短期储蓄'], [7, 7, '投资联合'], [8, 11, ''], [12, 14, ''], [15, 18, ''], [19, 19, ''], [20, 20, ''], [21, 21, ''], [22, 22, '付法'], [23, 23, '年满期'], [24, 24, '支付']],
+      [[0, 0, ''], [1, 1, ''], [2, 2, ''], [3, 3, ''], [4, 4, '储蓄'], [5, 5, '疾病'], [6, 6, '教育/公基金'], [7, 7, '人寿'], [8, 8, '死亡'], [9, 9, '终生残废'], [10, 10, '每周赔偿'], [11, 11, '医药'], [12, 12, '住院费'], [13, 13, '手术费'], [14, 14, '总保费'], [15, 15, '疾病'], [16, 16, '付款人'], [17, 17, '女性保'], [18, 18, '延续终身残废'], [19, 19, ''], [20, 20, ''], [21, 21, ''], [22, 22, ''], [23, 23, ''], [24, 24, '']]
+    ];
+    var HR = [6, 4.2, 4.2, 4, 4.2], HS = [6.5, 6.5, 7.5, 6, 6.5];
+    function pageRecord(i) {
+      var c = i.client;
+      var rv = RV[c.key] || {};
+      newPage();
+      txt('Total Protection Planning Record', 14, 19, { b: 1, s: 21 });
+      doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.35);
+      txt('全方面保障记录', 21, 30.5, { b: 1, s: 24, c: [250, 232, 0], rm: 'fillThenStroke' });
+      ['你和你的家人可能都有购买保险，但很多人认为有买就好了，', '从不去理会有没有买完整的保险，到了事情发生，索赔不到，怨声才到，已经太迟了。', '在这里，让我来给你做个诊断，看你缺少些什么，再帮你完成一个完整的保障计划。']
+        .forEach(function (l, k) { txt(l, 207, 13 + k * 4.6, { b: 1, s: 8.5, c: [110, 0, 0], a: 'center' }); });
+      var top = 35, y = top;
+      HEAD.forEach(function (row, r) {
+        row.forEach(function (cell) {
+          var x1 = EX[cell[0]], x2 = EX[cell[1] + 1];
+          rect(x1, y, x2 - x1, HR[r], 0.25);
+          fit(cell[2], x1, y + HR[r] / 2, x2 - x1, r === 0 && cell[0] === 4 ? 10 : HS[r], { b: r < 2 });
+        });
+        y += HR[r];
+      });
+      var pols = c.policies, n = Math.max(9, pols.length), rh = Math.min(6.4, 58 / n);
+      for (var k = 0; k < n; k++) {
+        for (var col = 0; col < 25; col++) rect(EX[col], y, EX[col + 1] - EX[col], rh, 0.25);
+        var p = pols[k], cy = y + rh / 2;
+        if (p) {
+          fit(String(k + 1), EX[0], cy, EX[1] - EX[0], 6.5);
+          fit(c.name, EX[1], cy, EX[2] - EX[1], 6.5, { a: 'left' });
+          fit(opts.company || 'GE', EX[2], cy, EX[3] - EX[2], 6.5);
+          if (p.plan) { fit(p.policyNo, EX[3], y + rh * 0.34, EX[4] - EX[3], 6.3); fit(p.plan, EX[3], y + rh * 0.76, EX[4] - EX[3], 4.6, { c: MUTED }); }
+          else fit(p.policyNo, EX[3], cy, EX[4] - EX[3], 6.5);
+          fit(p.startYear, EX[20], cy, EX[21] - EX[20], 6.5);
+          fit(p.perYear != null ? money(p.perYear) : '', EX[21], cy, EX[22] - EX[21], 6.5, { a: 'right' });
+          fit(MODE_LETTER[p.mode] || p.mode, EX[22], cy, EX[23] - EX[22], 6.5);
+          var cv = (rv.cov || {})[policyKey(p, k)] || {};
+          COV.forEach(function (cd) { var v = cv[cd[0]]; if (!v || cd[1] < 0 || cd[0] === 'maturity') return; fit(amt(v), EX[cd[1]], cy, EX[cd[1] + 1] - EX[cd[1]], 6, { c: PEN }); });
+          fit(cv.maturity || p.maturityYear, EX[23], cy, EX[24] - EX[23], 6.5, { c: cv.maturity ? PEN : INK });
+          if (cv.outstanding) txt(amt(cv.outstanding), EX[25] + 2, cy + 1, { s: 6.5, c: PEN });
+        }
+        y += rh;
+      }
+      rect(EX[0], top, EX[25] - EX[0], y - top, 0.6);
+      txt('value   outstanding', EX[25] + 2, top + 21.5, { s: 6.5 });
+
+      var b = Math.max(y + 5, 121);
+      txt('* C - CREDIT CARD', 13, b, { s: 7 }); txt('**精明早期保障', 13, b + 4, { s: 7 });
+      var ry = b + 6, RH = 23;
+      /* REMARK: facts from the export that have no column in the template */
+      rect(14.2, ry, 43.3, RH, 0.25); line(14.2, ry + 4, 57.5, ry + 4, 0.25);
+      txt('REMARK', 16, ry + 3, { s: 7 });
+      var notes = pols.map(function (q) {
+        var parts = [q.policyNo || q.plan || 'Policy'];
+        if (q.sum != null) parts.push('SA RM ' + money(q.sum));
+        if (q.riders) parts.push(q.riders);
+        if (q.perYear == null && q.premium != null && q.mode !== 'Single') parts.push('premium RM ' + money(q.premium) + ' ' + (q.mode || '') + ', confirm frequency');
+        return parts.join(', ');
+      });
+      notes.push('Total premium / yr: RM ' + money(c.perYear) + (c.premiumGaps ? ' (excl. ' + c.premiumGaps + ' to confirm)' : ''));
+      if (rv.remark && rv.remark.trim()) notes.unshift(rv.remark.trim());
+      f(false, 5.6);
+      var wrapped = [];
+      notes.forEach(function (l) { wrapped = wrapped.concat(doc.splitTextToSize(l, 40)); });
+      var maxL = Math.floor((RH - 5.2) / 2.3);
+      if (wrapped.length > maxL) wrapped = wrapped.slice(0, maxL - 1).concat(['… more policies in the app']);
+      wrapped.forEach(function (l, k2) { txt(l, 15.4, ry + 6.6 + k2 * 2.3, { s: 5.6 }); });
+      /* 受益人 */
+      var bx1 = 66.5, bx2 = 107.3, bs = 75.6, bh = RH / 6;
+      for (var r2 = 0; r2 < 6; r2++) { rect(bx1, ry + r2 * bh, bs - bx1, bh, 0.25); rect(bs, ry + r2 * bh, bx2 - bs, bh, 0.25); }
+      fit('受益人', bs, ry + bh / 2, bx2 - bs, 7, { a: 'right', pad: 6 });
+      var bens = rv.bens && rv.bens.some(function (x) { return x && x.trim(); }) ? rv.bens : (c.beneficiaries || []);
+      for (var r3 = 1; r3 <= 5; r3++) {
+        fit(String(r3), bx1, ry + r3 * bh + bh / 2, bs - bx1, 6.5, { a: 'right' });
+        if (bens[r3 - 1]) fit(bens[r3 - 1], bs, ry + r3 * bh + bh / 2, bx2 - bs, 6.3, { a: 'left' });
+      }
+      /* RETIREMENT FUND/SAVING 退休金储蓄 */
+      var tx = [116.5, 127.2, 136.4, 145.5, 157.3], th = 3.9;
+      rect(tx[0], ry, tx[4] - tx[0], 8, 0.25);
+      txt('RETIREMENT FUND/SAVING', tx[0] + 1, ry + 3, { s: 6.5 }); txt('退休金储蓄', (tx[0] + tx[4]) / 2, ry + 6.7, { s: 6.5, a: 'center', c: [60, 60, 60] });
+      for (var r4 = 0; r4 < 7; r4++) {
+        var yy = ry + 8 + r4 * th;
+        for (var c4 = 0; c4 < 4; c4++) rect(tx[c4], yy, tx[c4 + 1] - tx[c4], th, 0.25);
+        if (r4) {
+          fit(String(r4), tx[0], yy + th / 2, tx[1] - tx[0], 6.5, { a: 'right' });
+          var rr = (rv.ret || [])[r4 - 1] || [];
+          for (var c5 = 1; c5 < 4; c5++) if (rr[c5 - 1]) fit(amt(rr[c5 - 1]), tx[c5], yy + th / 2, tx[c5 + 1] - tx[c5], 6, { c: PEN });
+        }
+      }
+      txt('Note:M-Month; Q-Quarterly; H-Half Yearly; Y-Yearly', 13, ry + 29.5, { s: 7 });
+      img('flower', 181, b + 1, 69, 48);
+    }
+
+    /* ---------- Template page 2: 全方面保障计划 ---------- */
+    function pagePlan(i) {
+      var c = i.client, PUR = [150, 40, 220], rvp = (RV[c.key] || {}).plan || {};
+      newPage();
+      txt('全方面保障计划', 14, 22, { b: 1, s: 30, c: [232, 32, 32] });
+      fit(c.name, 16, 30.8, 84, 11, { a: 'left', pad: 1 });
+      line(16, 34, 100, 34, 0.5);
+      ['你和你的家人可能都有购买保险，', '但很多人认为有买就好了，', '从不去理会有没有买完整的保险，到了事情发生，', '索赔不到，怨声才到，已经太迟了。', '在这里，让我来给你做个诊断，看你缺少些什么，', '再帮你完成一个完整的保障计划。']
+        .forEach(function (l, k) { txt(l, 230, 9 + k * 4.7, { b: 1, s: 9.5, c: [95, 45, 150], a: 'center' }); });
+      line(148, 40, 148, 196, 1.3); line(7, 118, 290, 118, 1.3);
+      function quad(x, y0, title, color, image, ib, items, step, size) {
+        txt(title, x + 8, y0, { b: 1, s: 24, c: color });
+        img(image, ib[0], ib[1], ib[2], ib[3]);
+        var yy = y0 + 12;
+        items.forEach(function (it) {
+          var tx0 = x + 9 + (it.ind ? 30 : 0);
+          if (!it.ind) txt('•', x + 3, yy, { b: 1, s: size, c: it.p ? PUR : INK });
+          txt(it.t, tx0, yy, { b: 1, s: size, c: it.p ? PUR : INK });
+          if (it.f) { var e = tx0 + tw(it.t, true, size) + 2; txt('–', e, yy, { b: 1, s: size }); line(e + 4.5, yy + 0.8, x + 132, yy + 0.8, 0.25, [130, 130, 130]);
+            if (it.k && rvp[it.k]) fit(amt(rvp[it.k]), e + 5, yy - 1.6, x + 132 - e - 5, size - 1, { a: 'left', pad: 0.5, b: 1, c: PEN }); }
+          yy += step;
+        });
+      }
+      quad(7, 60, '1. 人寿', [238, 88, 34], 'family', [96, 41, 42, 36], [{ t: '为家人', p: 1 }, { t: '保障', f: 1, k: 'life_protect' }, { t: '残废时的生活费（每年）', f: 1, k: 'life_disab' }], 9, 13);
+      quad(150, 52, '2. 疾病', [190, 72, 62], 'doctor', [252, 39, 34, 26], [{ t: '为自己', p: 1 }, { t: '生活费（SMCC 188种初，中，末期）' }, { t: '保值', f: 1, ind: 1, k: 'ci_smcc' }, { t: '生活费（50种严重疾病）' }, { t: '保值', f: 1, ind: 1, k: 'ci_50_val' }, { t: '增值', f: 1, ind: 1, k: 'ci_50_add' }, { t: '精明早期保障（受控制）' }, { t: '保值', f: 1, ind: 1, k: 'ci_early' }, { t: '癌症保单', f: 1, k: 'ci_cancer' }], 6, 11);
+      quad(7, 142, '3. 意外', [30, 115, 195], 'teddy', [96, 124, 44, 29], [{ t: '为自己/家人', p: 1 }, { t: '意外死亡或残障', f: 1, k: 'acc_death' }, { t: '医药费', f: 1, k: 'acc_med' }, { t: '收入代替（每月）', f: 1, k: 'acc_income' }], 9, 13);
+      quad(150, 142, '4. 医药卡', [238, 30, 120], 'hospital', [252, 123, 34, 28], [{ t: '为医生', p: 1 }, { t: '医药卡（病房/天）', f: 1, k: 'med_room' }, { t: '年限额', f: 1, k: 'med_annual' }, { t: '终生限额', f: 1, k: 'med_life' }, { t: '住院津贴（一天）', f: 1, k: 'med_daily' }], 8.5, 13);
+      var foot = '*如不幸患上49种疾病或终身残废－免付保费';
+      txt(foot, 8, 202, { b: 1, s: 12, c: [232, 32, 32] });
+      txt('（除了冠状动脉疾病的血管成形术和其他微创治疗）', 8 + tw(foot, true, 12) + 1, 202, { b: 1, s: 8.5, c: [232, 32, 32] });
+    }
+
+    /* ---------- Template page 3: 财富保障 Wealth Protection (5 Fingers) ---------- */
+    function pageWealth(i) {
+      var c = i.client, rvw = RV[c.key] || {}, calc = reviewCalc(rvw), GOOD = [19, 115, 71], BAD = [190, 30, 30];
+      newPage();
+      img('logo', 10, 8, 44, 20.5);
+      if (parseMoney(rvw.income) != null) txt('Annual income 年收入 : RM ' + amt(rvw.income), 222, 27, { b: 1, s: 9.5, c: PEN });
+      txt('财富保障 Wealth Protection', 64, 25, { s: 22 });
+      txt('(5 Fingers)', 64 + tw('财富保障 Wealth Protection', false, 22) + 2, 25, { b: 1, s: 11 });
+      txt('NAME:', 222, 14, { b: 1, s: 10 }); fit(c.name, 235, 12.7, 57, 10, { a: 'left', pad: 0 });
+      txt('UP DATE :', 222, 20.5, { b: 1, s: 10 }); txt(dateStr, 241, 20.5, { s: 10 });
+      function box(x, y, w, lw, title, hc, hh, rowH, size, key) {
+        fill(x, y, w, hh, hc);
+        txt(title, x + 3, y + hh / 2, { b: 1, s: size + 1, c: WHITE, bl: 'middle' });
+        var raw = (rvw.fing || {})[key] || {}, g = calc.fing[key];
+        ['Current', 'Required', 'Surplus/Shortage'].forEach(function (l, k) {
+          var yy = y + hh + k * rowH;
+          fill(x, yy, w, rowH, k % 2 ? [232, 240, 244] : [210, 227, 235]);
+          rect(x, yy, lw, rowH, 0.2, [120, 130, 140]); rect(x + lw, yy, w - lw, rowH, 0.2, [120, 130, 140]);
+          fit(l, x, yy + rowH / 2, lw, size, { a: 'left', pad: 2.5 });
+          var v = k === 0 ? (raw.cur ? 'RM ' + amt(raw.cur) : '') : k === 1 ? (raw.req ? 'RM ' + amt(raw.req) : '')
+            : g.gap == null ? '' : (g.gap >= 0 ? 'Surplus RM ' : 'Shortage RM ') + money(Math.abs(g.gap)).replace(/\.00$/, '');
+          if (v) fit(v, x + lw, yy + rowH / 2, w - lw, size, { a: 'right', pad: 2.5, b: 1, c: k < 2 ? PEN : g.gap >= 0 ? GOOD : BAD });
+        });
+        rect(x, y, w, hh + 3 * rowH, 0.3, [90, 100, 110]);
+      }
+      box(7, 46, 88, 46, '01 Death & TPD 死亡 残废', [47, 138, 158], 8, 9, 10, 'death');
+      box(7, 92, 88, 46, '02 Critical Illness 疾病', [36, 110, 168], 8.5, 10, 11, 'ci');
+      box(7, 140, 92, 56, '03  Early Critical Illness 初期疾病', [246, 205, 140], 12, 11, 13, 'eci');
+      box(104, 148, 80, 46, '04 Accident 意外', [160, 160, 160], 9, 12, 10, 'acc');
+      box(190, 146, 100, 48, '05 Hospitalisation 住院', [28, 53, 94], 10, 12, 10, 'hosp');
+      function dot(x, y, col, label) {
+        doc.setFillColor(col[0], col[1], col[2]); doc.circle(x, y, 6.5, 'F');
+        if (label) txt(label, x, y + 0.3, { b: 1, s: 13, c: WHITE, a: 'center', bl: 'middle' });
+      }
+      dot(172, 44, [250, 205, 95], '03');
+      txt('早期重大疾病', 181, 42, { s: 14, c: [244, 185, 80] }); txt('Early Stage Critical Illness', 181 + tw('早期重大疾病', false, 14) + 2, 42, { s: 13 });
+      txt('1-2 年的收入替代 Income replacement for 1–2 years', 181, 50, { s: 10 });
+      dot(110, 60, [52, 126, 180], '');
+      txt('意外 Accident', 119, 61.5, { b: 1, s: 16, c: [125, 125, 125] });
+      ['根据生活方式的门诊及中医理赔', 'Outpatient and Traditional Chinese', 'Medicine (TCM) claims based on', 'lifestyle'].forEach(function (l, k) { txt(l, 119, 70 + k * 6, { s: 9.5 }); });
+      dot(222, 72, [110, 110, 110], '02');
+      txt('重大疾病', 230, 70, { s: 12, c: [40, 110, 170] }); txt('Critical Illness', 230 + tw('重大疾病', false, 12) + 2, 70, { s: 12 });
+      txt('3-5年的收入替代', 230, 77.5, { s: 10 }); txt('Income replacement for 3–5 years', 230, 83, { s: 9 });
+      dot(110, 101, [20, 55, 95], '');
+      txt('住院', 119, 103, { s: 15, c: [40, 90, 150] }); txt('Hospitalisation', 119 + tw('住院', false, 15) + 2, 103, { s: 15 });
+      txt('私人或者政府医院', 119, 110.5, { s: 10 }); txt('Private or Government Hospital', 119, 116.5, { s: 10 });
+      dot(214, 104, [40, 160, 210], '01');
+      txt('死亡 & 终身残障', 222, 102, { s: 13, c: [60, 170, 220] });
+      txt('Death & Total Permanent Disability (TPD)', 222, 109, { b: 1, s: 7.5 });
+      txt('年收入的10倍', 222, 116, { s: 11 }); txt('10 times annual income', 222, 122, { s: 11 });
+    }
+
+    /* ---------- Template page 4: 资产 / 现金流 / 负债 / 资产配置 ---------- */
+    function pageMap(i) {
+      var c = i.client, GREEN = [44, 170, 72], PURPLE = [120, 64, 160], RED = [232, 32, 32], CYAN = [30, 175, 230];
+      var rvm = RV[c.key] || {}, cm = reviewCalc(rvm);
+      function para(text, x, y, w, maxY) {
+        if (!text || !String(text).trim()) return;
+        f(false, 10); var ls = doc.splitTextToSize(norm(String(text).trim()), w), lh = 4.6;
+        ls.slice(0, Math.floor((maxY - y) / lh) + 1).forEach(function (l, k) { txt(l, x, y + k * lh, { s: 10, c: PEN }); });
+      }
+      newPage();
+      txt('Name :', 10, 16, { b: 1, s: 17 }); line(33, 17.5, 100, 17.5, 0.5); fit(c.name, 34, 14.5, 66, 12, { a: 'left', pad: 1 });
+      txt('Date :', 224, 16, { b: 1, s: 17 }); line(244, 17.5, 288, 17.5, 0.5); txt(dateStr, 246, 15.5, { s: 12 });
+      img('logo', 131, 3, 36, 16.8);
+      dashed(7, 23, 141, 89, GREEN); img('house', 10, 26, 20, 17.6);
+      txt('资产', 77, 31, { s: 13, c: GREEN, a: 'center' }); txt('价值↑创造收入', 77, 37.5, { s: 12, c: GREEN, a: 'center' });
+      dots(11, 140, 86); txt('Eg:', 10, 91.5);
+      ['投资', '无贷款房产', '人寿保险'].forEach(function (l, k) { txt(l, 10, 96.5 + k * 5); });
+      ['- 大宗商品', '- 收藏品', '- 创收型业务'].forEach(function (l, k) { txt(l, 66, 96.5 + k * 5); });
+      dashed(151, 23, 139, 89, PURPLE); img('cashflow', 158, 26, 19, 15.8);
+      txt('现金流', 221, 33, { s: 13, a: 'center' });
+      var cx = 159;
+      [['收入 : $', cm.income], ['开销 : $', cm.expenses], ['盈余 : $', cm.surplus]].forEach(function (pr) {
+        txt(pr[0], cx, 50, { b: 1, s: 11, c: PURPLE }); var x0 = cx + tw(pr[0], true, 11);
+        txt('________', x0, 50, { b: 1, s: 11, c: PURPLE });
+        if (pr[1] != null) txt(money(pr[1]).replace(/\.00$/, ''), x0 + 1, 49.2, { b: 1, s: 10.5, c: pr[1] < 0 ? RED : PEN });
+        cx = x0 + tw('________', true, 11) + 7;
+      });
+      ['食物:', '交通 :', '账单 :', '保险:', '定期补贴 :', '娱乐 :', '杂费 :'].forEach(function (l, k) {
+        txt(l, 176, 61 + k * 6.7, { s: 13 }); txt('$__________', 212, 61 + k * 6.7, { b: 1, s: 12 });
+        var v = (rvm.cash || {})[CASH[k][0]]; if (v) txt(amt(v), 216, 60.2 + k * 6.7, { b: 1, s: 11, c: PEN });
+      });
+      para(rvm.assets, 12, 48, 128, 83);
+      para(rvm.liab, 12, 139, 128, 175);
+      dashed(8, 117, 139, 86, RED); img('handhouse', 9, 121, 19, 10.7);
+      txt('负债', 76, 124, { b: 1, s: 13, c: RED, a: 'center' }); txt('价值↓不创造收入', 76, 130.5, { s: 12, c: RED, a: 'center' });
+      dots(11, 140, 178); txt('Eg:', 10, 183);
+      ['固定开销', '车', '房产'].forEach(function (l, k) { txt(l, 10, 188 + k * 5); });
+      ['- 学习、个人贷款', '- 孩子', '- 退休双亲'].forEach(function (l, k) { txt(l, 72, 188 + k * 5); });
+      dashed(152, 117, 138, 86, CYAN); img('pie', 158, 119, 19, 15);
+      txt('资产配置', 222, 125, { b: 1, s: 13, c: CYAN, a: 'center' });
+      [[176, 156, '短期', '(<1years)', ['• 应急资金（覆盖6个', '   月开支）', '• 应急现金', '• 旅行'], 'short'],
+       [222, 202, '中期', '(2 years-10 years)', ['• 屋子', '• 家庭', '• 车', '• 儿女教育费', '• 投资', '• 财富累积'], 'mid'],
+       [268, 249, '长期', '(>10 years)', ['• 人寿&医疗保险', '• 退休'], 'long']].forEach(function (col) {
+        var al = (rvm.alloc || {})[col[5]] || {};
+        if (al.cur) txt(amt(al.cur), col[1] + tw('Current : $ ', false, 8.5), 186.2, { b: 1, s: 8.5, c: PEN });
+        if (al.pref) txt(amt(al.pref), col[1] + tw('Preferred : $ ', false, 8.5), 194.2, { b: 1, s: 8.5, c: PEN });
+        txt(col[2], col[0], 136, { b: 1, s: 10.5, a: 'center' }); var hw = tw(col[2], true, 10.5) / 2; line(col[0] - hw, 137, col[0] + hw, 137, 0.3);
+        txt(col[3], col[0], 141.5, { s: 9, a: 'center' });
+        col[4].forEach(function (l, k) { txt(l, col[1], 150 + k * 4.6, { s: 9.5 }); });
+        txt('Current : $ ________', col[1], 187, { s: 8.5 }); txt('Preferred : $ ______', col[1], 195, { s: 8.5 });
+      });
+    }
+
+    var packs = opts.items ? opts.items.slice() : P.toInvite.slice();
+    if (!opts.items) P.booked.forEach(function (b) { if (!b.apptPast && b.apptDate <= P.weekEnd && packs.indexOf(b) < 0) packs.push(b); });
+    packs.forEach(function (i) { pageRecord(i); pagePlan(i); pageWealth(i); pageMap(i); });
+
+    var pages = doc.getNumberOfPages();
+    for (var pg = 1; pg <= pages; pg++) {
+      doc.setPage(pg);
+      txt('KS Tan  •  KST | Key Solutions Team  •  Confidential: contains client information', M, 207, { s: 6.5, c: MUTED });
+      txt('Page ' + pg + ' of ' + pages, W - M, 207, { s: 6.5, c: MUTED, a: 'right' });
+      if (opts.sample) txt('EXAMPLE DATA, NOT REAL CLIENTS', W / 2 + 30, 207, { b: 1, s: 7.5, c: [180, 35, 24], a: 'center' });
+    }
+    return doc;
+  }
+
+  G.RBB = { COV: COV, PLAN_FIELDS: PLAN_FIELDS, FINGERS: FINGERS, CASH: CASH, ALLOC: ALLOC, policyKey: policyKey, reviewCalc: reviewCalc, amt: amt, parseMoney: parseMoney, FIELDS: FIELDS, D: D, iso: iso, fromIso: fromIso, day0: day0, addDays: addDays, addMonths: addMonths, diffDays: diffDays,
+    fmtLong: fmtLong, fmtDay: fmtDay, fmtRange: fmtRange, fmtTime: fmtTime, money: money, parseDate: parseDate, detectFormat: detectFormat,
+    icInfo: icInfo, normPhone: normPhone, modeInfo: modeInfo, guessMapping: guessMapping, findHeaderRow: findHeaderRow,
+    buildClients: buildClients, nextBirthday: nextBirthday, weeklyPlan: weeklyPlan, inviteMsg: inviteMsg, reminderMsg: reminderMsg, makePdf: makePdf };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var R = window.RBB;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function lsGet(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function toast(t) { var el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.textContent = t; $('toastRoot').innerHTML = ''; $('toastRoot').appendChild(el); setTimeout(function () { el.remove(); }, 3200); }
+
+  var today = R.day0(new Date());
+  var S = { mode: 'demo', data: null, demoStatus: {}, drafts: {}, langPick: {}, storeNote: '' };
+
+  /* ---------- Example clients (fictional), dates relative to today so the demo always has work in it ---------- */
+  function demoAoa() {
+    function dob(offsetDays, age) { var b = R.addDays(today, offsetDays); return R.D(b.getFullYear() - age, b.getMonth() + 1, b.getDate()); }
+    function dmy(d) { return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear(); }
+    function ic(d, tail) { return String(d.getFullYear()).slice(2) + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2) + '-01-' + tail; }
+    var a = dob(63, 41), b = dob(65, 36), c = dob(61, 38), d = dob(48, 34), e = dob(75, 29), f = dob(66, 52), g = dob(64, 46), h = dob(50, 31), k = dob(2, 33);
+    return [
+      ['Policy No', 'Policyholder Name', 'NRIC', 'Date of Birth', 'Mobile No', 'Language', 'Plan Name', 'Policy Status', 'Commencement Date', 'Sum Assured', 'Modal Premium', 'Payment Mode', 'Riders', 'Nominee'],
+      ['EX-1001', 'TAN MEI LING (EXAMPLE)', ic(a, '5501'), dmy(a), '012-000 0101', 'EN', 'Whole life plan', 'In force', '15/03/2012', '200000', '350.00', 'Monthly', '', 'Lim Kok Wai (Example)'],
+      ['EX-1002', 'TAN MEI LING (EXAMPLE)', ic(a, '5501'), dmy(a), '012-000 0101', 'EN', 'Medical card', 'In force', '02/08/2019', '', '180.00', 'Monthly', 'Hospital & surgical'],
+      ['EX-1003', 'Ahmad Faizal bin Rahman (Example)', ic(b, '5231'), dmy(b), '6013-000 0102', 'BM', 'Investment-linked plan', 'In force', '10/01/2016', '150000', '2400', 'Yearly', 'Critical illness'],
+      ['EX-1004', 'Priya a/p Subramaniam (Example)', ic(c, '6012'), '', '14-000 0103', 'EN', 'Critical illness plan', 'In force', '20/06/2018', '100000', '600', 'Half-yearly', ''],
+      ['EX-1005', 'LIM WEI JIE (EXAMPLE)', ic(d, '5117'), dmy(d), '016-000 0104', '', 'Medical card', 'In force', '05/11/2020', '', '210', 'M', ''],
+      ['EX-1006', 'Goh Boon Huat (Example)', ic(f, '5003'), dmy(f), '+65 8000 0105', 'EN', 'Whole life plan', 'In force', '01/04/2008', '300000', '1500', 'Quarterly', ''],
+      ['EX-1007', 'Nurul Aina binti Hassan (Example)', ic(R.addDays(g, 60), '6224'), dmy(g), '019-000 0106', 'BM', 'Medical card', 'In force', '09/09/2021', '', '160', 'Monthly', ''],
+      ['EX-1008', 'Muthu a/l Ramasamy (Example)', ic(h, '5519'), dmy(h), '07-000 0107', 'EN', 'Term plan', 'In force', '12/12/2015', '250000', '95', 'Bi-monthly', ''],
+      ['EX-1009', 'Wong Kar Mun (Example)', 'A0000000', '', '012-000 0108', 'EN', 'Endowment plan', 'In force', '30/07/2017', '50000', '1200', 'Yearly', ''],
+      ['EX-1010', 'Lee Jia Hui (Example)', ic(e, '6688'), dmy(e), '017-000 0109', 'EN', 'Medical card', 'In force', '14/02/2022', '', '230', 'Monthly', ''],
+      ['EX-1011', 'Siti Hajar binti Osman (Example)', ic(k, '6402'), dmy(k), '011-000 0110', 'BM', 'Medical card', 'In force', '03/03/2023', '', '150', 'Monthly', '']
+    ];
+  }
+  function demoStatuses(clients) {
+    var st = {}, plan = R.weeklyPlan(clients, {}, today);
+    var all = plan.toInvite.concat(plan.comingUp);
+    var goh = all.filter(function (i) { return /Goh/.test(i.client.name); })[0];
+    var ahmad = all.filter(function (i) { return /Ahmad/.test(i.client.name); })[0];
+    if (goh) st[goh.client.key] = { cycle: goh.cycle, invitedOn: R.iso(R.addDays(today, -6)), appt: R.iso(R.addDays(today, 4)) + 'T14:30', apptPlace: 'the café near your office' };
+    if (ahmad) st[ahmad.client.key] = { cycle: ahmad.cycle, invitedOn: R.iso(R.addDays(today, -1)), lang: 'bm' };
+    return st;
+  }
+
+  /* ---------- Data loading ---------- */
+  function build(src) {
+    var built = R.buildClients(src.aoa, src.headerIdx, src.map, src.fmt, today);
+    return { aoa: src.aoa, headerIdx: src.headerIdx, map: src.map, fmt: src.fmt, fileName: src.fileName, importedOn: src.importedOn, clients: built.clients, rowIssues: built.rowIssues, rows: built.rows };
+  }
+  function loadDemo() {
+    var aoa = demoAoa(), map = R.guessMapping(aoa[0]);
+    S.mode = 'demo'; S.data = build({ aoa: aoa, headerIdx: 0, map: map, fmt: 'DMY', fileName: 'example', importedOn: R.iso(today) });
+    S.demoStatus = demoStatuses(S.data.clients);
+  }
+  var saved = lsGet('rbb.list');
+  if (saved && saved.aoa && saved.map) { S.mode = 'live'; S.data = build(saved); } else loadDemo();
+
+  /* ---------- Progress store: account (private, coded IDs only) with this-device fallback ---------- */
+  var Store = { kind: 'device', data: lsGet('rbb.status') || {}, col: null };
+  Store.set = function (key, patch) {
+    var cur = Store.data[key] || {}, next = {};
+    Object.keys(cur).forEach(function (k) { next[k] = cur[k]; });
+    Object.keys(patch).forEach(function (k) { if (patch[k] === null) delete next[k]; else next[k] = patch[k]; });
+    next.updatedAt = new Date().toISOString();
+    Store.data[key] = next; lsSet('rbb.status', Store.data);
+    if (Store.col) Store.col.doc(key).set(next).catch(function () { toast('Couldn’t save to your account. Saved on this device.'); });
+  };
+  (function connect() {
+    if (!window.claude || !window.claude.use) { S.storeNote = 'Your client list and progress are saved in this browser on this device only. Use the same phone or computer each week.'; return; }
+    var timer = setTimeout(function () { S.storeNote = 'Couldn’t reach your account. Progress is saved on this device only.'; render(); }, 10000);
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+      var db = r[0], user = r[1];
+      if (!db || !user) { clearTimeout(timer); S.storeNote = 'Sign in to keep progress across devices. For now it is saved on this device.'; render(); return; }
+      return user.id().then(function (id) {
+        Store.col = db.collection('data/users/' + id);
+        var first = true;
+        Store.col.onSnapshot(function (snap) {
+          clearTimeout(timer);
+          var remote = {}; snap.docs.forEach(function (d) { remote[d.id] = d.data(); });
+          if (first) {  /* push any progress made offline that the account doesn't have yet */
+            Object.keys(Store.data).forEach(function (k) { if (!remote[k] || (remote[k].updatedAt || '') < (Store.data[k].updatedAt || '')) { remote[k] = Store.data[k]; Store.col.doc(k).set(Store.data[k]).catch(function () {}); } });
+            first = false;
+          }
+          Store.kind = 'account'; Store.data = remote; lsSet('rbb.status', remote); S.storeNote = ''; render();
+        }, function () { clearTimeout(timer); Store.col = null; S.storeNote = 'Couldn’t reach your account. Progress is saved on this device only.'; render(); });
+      });
+    }).catch(function () { clearTimeout(timer); S.storeNote = 'Progress is saved on this device only.'; render(); });
+  })();
+
+  function statuses() { return S.mode === 'demo' ? S.demoStatus : Store.data; }
+  function setStatus(key, patch) {
+    if (S.mode === 'demo') {
+      var cur = S.demoStatus[key] || {}; Object.keys(patch).forEach(function (k) { if (patch[k] === null) delete cur[k]; else cur[k] = patch[k]; });
+      S.demoStatus[key] = cur;
+    } else Store.set(key, patch);
+    render();
+  }
+
+  /* ---------- Rendering ---------- */
+  var plan = null;
+  function langFor(item) { return S.langPick[item.client.key] || item.lang; }
+  function draftKey(item, type, lang) { return item.client.key + '|' + type + '|' + lang + '|' + (item.st.appt || item.cycle); }
+  function msgFor(item, type) {
+    var lang = langFor(item), k = draftKey(item, type, lang);
+    if (S.drafts[k] != null) return S.drafts[k];
+    return type === 'invite' ? R.inviteMsg(item, lang) : R.reminderMsg(item, lang);
+  }
+  function policyLine(c) {
+    return c.policies.length + ' polic' + (c.policies.length > 1 ? 'ies' : 'y') + (c.perYear ? ' · RM ' + R.money(c.perYear) + ' a year' + (c.premiumGaps ? ' (some to confirm)' : '') : '');
+  }
+  function langSeg(item, type) {
+    var l = langFor(item), k = item.client.key;
+    return '<div class="seg" role="group" aria-label="Message language"><button type="button" data-act="lang" data-key="' + k + '" data-lang="en" aria-pressed="' + (l === 'en') + '">English</button>' +
+      '<button type="button" data-act="lang" data-key="' + k + '" data-lang="bm" aria-pressed="' + (l === 'bm') + '">Bahasa Melayu</button></div>';
+  }
+  function phoneFlag(c) { return c.phoneErr ? '<div class="flag bad">' + esc(c.phoneErr) + '. Fix it in the company system, then re-import.</div>' : ''; }
+  function msgArea(item, type) {
+    var id = 'msg-' + type + '-' + item.client.key;
+    return '<label class="hint" for="' + id + '">Message (you can edit it)</label><textarea id="' + id + '" data-draft="' + esc(draftKey(item, type, langFor(item))) + '">' + esc(msgFor(item, type)) + '</textarea>';
+  }
+  function inviteCard(i) {
+    var c = i.client;
+    return '<article class="card"><div class="row" style="justify-content:space-between"><span class="name">' + esc(c.name) + '</span>' +
+      (i.late ? '<span class="pill late">Late · birthday in ' + i.daysToBday + ' days</span>' : '<span class="pill due">Review by ' + R.fmtDay(i.review) + '</span>') + '</div>' +
+      '<div class="meta"><span>Turning ' + i.turning + ' on ' + R.fmtDay(i.bday) + '</span><span>' + esc(policyLine(c)) + '</span>' + (c.phone ? '<span class="mono">' + esc(c.phone.pretty) + '</span>' : '') + '</div>' +
+      '<details><summary>Policies</summary><ul>' + c.policies.map(function (p) { return '<li>' + esc((p.plan || 'Plan not given') + (p.policyNo ? ' (' + p.policyNo + ')' : '')) + ' — ' + esc([p.status, p.sum != null ? 'SA RM ' + R.money(p.sum) : '', p.premium != null ? 'RM ' + R.money(p.premium) + ' ' + (p.mode || '').toLowerCase() : ''].filter(Boolean).join(', ')) + (p.riders ? '<br><span class="hint">Riders: ' + esc(p.riders) + '</span>' : '') + '</li>'; }).join('') + '</ul></details>' +
+      phoneFlag(c) + langSeg(i, 'invite') + msgArea(i, 'invite') +
+      '<div class="row"><button type="button" class="wa" data-act="send" data-type="invite" data-key="' + c.key + '"' + (c.phone ? '' : ' disabled') + '>Send on WhatsApp</button>' +
+      '<button type="button" data-act="review" data-key="' + c.key + '">Policy review</button>' +
+      '<button type="button" data-act="card" data-key="' + c.key + '">Birthday card</button>' +
+      '<button type="button" class="ghost" data-act="skip" data-key="' + c.key + '">Skip this year</button></div></article>';
+  }
+  function birthdayCard(i) {
+    var c = i.client, when = i.daysToBday === 0 ? 'Today' : i.daysToBday === 1 ? 'Tomorrow' : 'In ' + i.daysToBday + ' days';
+    return '<article class="card"><div class="row" style="justify-content:space-between"><span class="name">' + esc(c.name) + '</span>' +
+      (i.cardSent ? '<span class="pill ok">Card sent</span>' : '<span class="pill ' + (i.daysToBday === 0 ? 'late' : 'due') + '">' + when + '</span>') + '</div>' +
+      '<div class="meta"><span>Birthday ' + R.fmtDay(i.bday) + '</span>' + (c.phone ? '<span class="mono">' + esc(c.phone.pretty) + '</span>' : '') + '</div>' +
+      '<div class="row"><button type="button" class="primary" data-act="card" data-key="' + c.key + '">' + (i.cardSent ? 'Make another card' : 'Create birthday card') + '</button></div></article>';
+  }
+  function reminderCard(i) {
+    var c = i.client, soon = i.sendOn < plan.today, isToday = R.iso(i.sendOn) === R.iso(plan.today);
+    return '<article class="card"><div class="row" style="justify-content:space-between"><span class="name">' + esc(c.name) + '</span>' +
+      (soon ? '<span class="pill late">Send now</span>' : isToday ? '<span class="pill due">Send today</span>' : '<span class="pill warn">Send on ' + R.fmtDay(i.sendOn) + '</span>') + '</div>' +
+      '<div class="meta"><span>Appointment ' + R.fmtDay(i.apptDate) + (i.apptTime ? ', ' + R.fmtTime(i.apptTime, 'en') : '') + '</span>' + (i.st.apptPlace ? '<span>' + esc(i.st.apptPlace) + '</span>' : '') + (c.phone ? '<span class="mono">' + esc(c.phone.pretty) + '</span>' : '') + '</div>' +
+      phoneFlag(c) + langSeg(i, 'reminder') + msgArea(i, 'reminder') +
+      '<div class="row"><button type="button" class="wa" data-act="send" data-type="reminder" data-key="' + c.key + '"' + (c.phone ? '' : ' disabled') + '>Send on WhatsApp</button><button type="button" data-act="review" data-key="' + c.key + '">Policy review</button></div></article>';
+  }
+  function apptForm(i, label) {
+    var k = i.client.key, d = i.apptDate ? R.iso(i.apptDate) : '', t = i.apptTime || '', p = i.st.apptPlace || '';
+    return '<div class="row" style="align-items:flex-end"><label class="f" for="ad-' + k + '">Date<input type="date" id="ad-' + k + '" value="' + d + '" min="' + R.iso(plan.today) + '"></label>' +
+      '<label class="f" for="at-' + k + '">Time<input type="time" id="at-' + k + '" value="' + t + '"></label>' +
+      '<label class="f" for="ap-' + k + '" style="flex-basis:100%">Place (optional)<input type="text" id="ap-' + k + '" value="' + esc(p) + '" placeholder="e.g. office, video call"></label>' +
+      '<button type="button" class="primary" data-act="appt" data-key="' + k + '">' + label + '</button></div>';
+  }
+  function invitedCard(i) {
+    var c = i.client, days = i.invitedOn ? R.diffDays(i.invitedOn, plan.today) : 0;
+    return '<article class="card"><div class="row" style="justify-content:space-between"><span class="name">' + esc(c.name) + '</span>' +
+      (days >= 5 ? '<span class="pill warn">No reply for ' + days + ' days</span>' : '<span class="pill ok">Invited ' + (i.invitedOn ? R.fmtDay(i.invitedOn) : '') + '</span>') + '</div>' +
+      '<div class="meta"><span>Birthday ' + R.fmtDay(i.bday) + '</span><span>' + esc(policyLine(c)) + '</span></div>' +
+      '<p class="hint">When they reply, enter the appointment. A reminder will be lined up for 3 days before.</p>' + apptForm(i, 'Save appointment') +
+      '<div class="row"><button type="button" data-act="review" data-key="' + c.key + '">Policy review</button><button type="button" class="ghost" data-act="uninvite" data-key="' + c.key + '">I didn’t send it after all</button></div></article>';
+  }
+  function bookedRow(i) {
+    var c = i.client, rem = i.st.remindedOn ? 'Reminder sent ' + R.fmtDay(R.fromIso(i.st.remindedOn)) : 'Reminder ' + (i.sendOn < plan.today ? 'due now' : 'on ' + R.fmtDay(i.sendOn));
+    return '<article class="card"><div class="row" style="justify-content:space-between"><span class="name">' + esc(c.name) + '</span>' +
+      (i.apptPast ? '<span class="pill warn">Meeting date has passed</span>' : '<span class="pill ok">' + R.fmtDay(i.apptDate) + (i.apptTime ? ', ' + R.fmtTime(i.apptTime, 'en') : '') + '</span>') + '</div>' +
+      '<div class="meta"><span>' + esc(rem) + '</span>' + (i.st.apptPlace ? '<span>' + esc(i.st.apptPlace) + '</span>' : '') + '</div>' +
+      '<div class="row"><button type="button" class="primary" data-act="done" data-key="' + c.key + '">Mark review done</button><button type="button" data-act="review" data-key="' + c.key + '">Policy review</button><button type="button" data-act="change" data-key="' + c.key + '">Change appointment</button></div>' +
+      '<div id="chg-' + c.key + '" hidden>' + apptForm(i, 'Save new time') + '</div></article>';
+  }
+  function section(id, title, n, hint, body, emptyText) {
+    return '<section id="' + id + '"><h2>' + title + ' <span class="n">' + n + '</span></h2>' + (hint ? '<p class="hint">' + hint + '</p>' : '') + (n ? body : '<div class="empty">' + emptyText + '</div>') + '</section>';
+  }
+  function render() {
+    plan = R.weeklyPlan(S.data.clients, statuses(), today);
+    var nc = plan.needsCheck.length + S.data.rowIssues.length;
+    $('weekline').textContent = 'Week of ' + R.fmtRange(plan.today, plan.weekEnd) + ' · ' + (S.mode === 'demo' ? 'example clients' : S.data.clients.length + ' clients from ' + (S.data.fileName || 'your export'));
+    var b = '';
+    if (S.mode === 'demo') b += '<div class="banner demo"><b>You’re looking at example clients.</b><span>Nothing here is real and WhatsApp is turned off for them. Export your client and policy list from the company system as Excel or CSV, then tap Import client list.</span></div>';
+    else {
+      var age = R.diffDays(R.fromIso(S.data.importedOn) || today, today);
+      if (age >= 7) b += '<div class="banner info">This list was imported ' + age + ' days ago. Import this week’s export so new clients and changes are included.</div>';
+      if (S.storeNote) b += '<div class="banner info">' + esc(S.storeNote) + '</div>';
+    }
+    $('banner').innerHTML = b;
+    var chips = [['invite', 'To invite', plan.toInvite.length, 'hot'], ['remind', 'Reminders', plan.reminders.length, 'hot'], ['bday', 'Birthdays', plan.birthdays.length, plan.birthdays.length ? 'hot' : ''], ['waiting', 'Waiting', plan.invited.length, ''], ['booked', 'Booked', plan.booked.length, ''], ['check', 'Needs checking', nc, nc ? 'warnc' : '']];
+    $('chips').innerHTML = chips.map(function (c) { return '<a class="chip ' + c[3] + '" href="#' + c[0] + '"><b>' + c[2] + '</b><span>' + c[1] + '</span></a>'; }).join('');
+    var h = '';
+    h += section('invite', 'Review and invite', plan.toInvite.length, 'Birthday is about 2 months away. Look over the policies, then send the invitation.', plan.toInvite.map(inviteCard).join(''), 'Nobody is due for a review this week.');
+    h += section('remind', 'Reminders to send', plan.reminders.length, 'Appointments coming up. Send each reminder 3 days before.', plan.reminders.map(reminderCard).join(''), 'No reminders due this week.');
+    h += section('bday', 'Birthdays this week', plan.birthdays.length, 'Make a birthday card and send your wishes.', plan.birthdays.map(birthdayCard).join(''), 'No client birthdays this week.');
+    h += section('waiting', 'Waiting for reply', plan.invited.length, '', plan.invited.map(invitedCard).join(''), 'Nobody is waiting for a reply.');
+    h += section('booked', 'Booked appointments', plan.booked.length, '', plan.booked.map(bookedRow).join(''), 'No appointments booked yet.');
+    var checks = plan.needsCheck.map(function (n) { return '<div class="li"><span><b>' + esc(n.client.name) + '</b><br>' + esc(n.issues.join('; ')) + '</span><span class="r">Row ' + n.client.rows.join(', ') + '</span></div>'; })
+      .concat(S.data.rowIssues.map(function (r) { return '<div class="li"><span>' + esc(r.issue) + '</span><span class="r">Row ' + r.row + '</span></div>'; }));
+    h += section('check', 'Needs checking', nc, 'These clients can’t be scheduled yet because their details are missing or don’t agree. The app won’t guess. Fix them in the company system, then re-import.', '<div class="list">' + checks.join('') + '</div>', 'Every client has a birth date the app could confirm.');
+    h += section('soon', 'Coming up in the next 5 weeks', plan.comingUp.length, '', '<div class="list">' + plan.comingUp.map(function (i) { return '<div class="li"><span>' + esc(i.client.name) + '</span><span class="r">Review ' + R.fmtDay(i.review) + '</span></div>'; }).join('') + '</div>', 'Nothing else in the next 5 weeks.');
+    if (S.mode === 'live') h += '<section><div class="row"><button type="button" class="ghost" data-act="clear">Remove imported list from this device</button></div></section>';
+    $('main').innerHTML = h;
+  }
+
+  /* ---------- Sheets (in-page dialogs) ---------- */
+  function closeSheet() { $('sheetRoot').innerHTML = ''; }
+  function openSheet(html) {
+    $('sheetRoot').innerHTML = '<div class="sheet-bg" data-act="closebg"><div class="sheet" role="dialog" aria-modal="true">' + html + '</div></div>';
+    var f = $('sheetRoot').querySelector('button,a,select,input'); if (f) f.focus();
+  }
+  function findItem(key) {
+    var all = plan.toInvite.concat(plan.reminders, plan.invited, plan.booked);
+    for (var i = 0; i < all.length; i++) if (all[i].client.key === key) return all[i];
+    return null;
+  }
+  function openSend(key, type) {
+    var item = findItem(key); if (!item) return;
+    var c = item.client, lang = langFor(item), ta = $('msg-' + type + '-' + key), msg = ta ? ta.value : msgFor(item, type);
+    var demo = S.mode === 'demo';
+    S.lastSend = { key: key, type: type };
+    var web = waTarget() === 'web';
+    var link = !c.phone ? '' : web ? 'https://web.whatsapp.com/send?phone=' + c.phone.wa + '&text=' + encodeURIComponent(msg)
+      : 'https://wa.me/' + c.phone.wa + '?text=' + encodeURIComponent(msg);
+    openSheet('<h3>Check before sending</h3><div class="meta"><span>To <b>' + esc(c.name) + '</b></span><span class="mono">' + esc(c.phone ? c.phone.pretty : '') + '</span><span>' + (lang === 'bm' ? 'Bahasa Melayu' : 'English') + '</span></div>' +
+      '<div class="msgbox">' + esc(msg) + '</div>' +
+      (demo ? '<div class="flag">This is an example client, so WhatsApp is turned off. With your real list, this button opens WhatsApp with the message filled in. You press Send there.</div>' +
+        '<div class="row"><button type="button" class="primary" data-act="sent" data-type="' + type + '" data-key="' + key + '" data-lang="' + lang + '">Pretend it was sent</button><button type="button" data-act="close">Cancel</button></div>'
+        : '<div class="row"><span class="hint">Open in</span><div class="seg" role="group" aria-label="Open in">' +
+          '<button type="button" data-act="waTarget" data-val="web" aria-pressed="' + web + '">WhatsApp Web</button>' +
+          '<button type="button" data-act="waTarget" data-val="app" aria-pressed="' + !web + '">WhatsApp app</button></div></div>' +
+        '<p class="hint">' + (web ? 'WhatsApp Web opens in a new tab with this chat and message ready. Make sure you’re logged in to web.whatsapp.com on this computer.' : 'The WhatsApp app opens with this message filled in.') + ' Nothing is sent until you press Send in WhatsApp.</p>' +
+        '<div class="row"><a class="btn wa" href="' + esc(link) + '" target="_blank" rel="noopener" data-act="opened">' + (web ? 'Open WhatsApp Web' : 'Open WhatsApp') + '</a><button type="button" data-act="close">Cancel</button></div>' +
+        '<div id="afterOpen" hidden class="card" style="padding:12px"><b>Did you press Send in WhatsApp?</b><div class="row"><button type="button" class="primary" data-act="sent" data-type="' + type + '" data-key="' + key + '" data-lang="' + lang + '">Yes, mark as sent</button><button type="button" data-act="close">Not yet</button></div></div>' +
+        '<p class="hint">If WhatsApp doesn’t open, copy the message and number: <button type="button" data-act="copy">Copy message</button></p>'));
+    $('sheetRoot').querySelector('.sheet').dataset.msg = msg;
+  }
+  /* WhatsApp Web on computers, the WhatsApp app on phones, unless the user picks otherwise (remembered on this device). */
+  function waTarget() {
+    if (S.waPref) return S.waPref;
+    var saved = lsGet('rbb.wa');
+    if (saved === 'web' || saved === 'app') return saved;
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ? 'app' : 'web';
+  }
+  function confirmSheet(title, text, act, key, label) {
+    openSheet('<h3>' + title + '</h3><p>' + text + '</p><div class="row"><button type="button" class="primary" data-act="' + act + '" data-key="' + (key || '') + '">' + label + '</button><button type="button" data-act="close">Cancel</button></div>');
+  }
+
+  /* ---------- Review worksheet: the KST template's 4 sections, filled in at the meeting ---------- */
+  function clientByKey(key) { var cs = S.data.clients; for (var i = 0; i < cs.length; i++) if (cs[i].key === key) return cs[i]; return null; }
+  function reviewsMap() { var st = statuses(), out = {}; Object.keys(st).forEach(function (k) { if (st[k] && st[k].review) out[k] = st[k].review; }); if (S.rv) out[S.rv.key] = S.rv.data; return out; }
+  function getPath(o, path) { return path.split('|').reduce(function (a, k) { return a == null ? undefined : a[k]; }, o); }
+  function setPath(o, path, v) {
+    var ks = path.split('|'), cur = o;
+    for (var i = 0; i < ks.length - 1; i++) { if (cur[ks[i]] == null || typeof cur[ks[i]] !== 'object') cur[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {}; cur = cur[ks[i]]; }
+    cur[ks[ks.length - 1]] = v;
+  }
+  var rvTimer = null;
+  function saveReviewSoon() { clearTimeout(rvTimer); rvTimer = setTimeout(saveReviewNow, 800); var s = $('rvSaved'); if (s) s.textContent = 'Saving…'; }
+  function saveReviewNow() {
+    clearTimeout(rvTimer); rvTimer = null; if (!S.rv) return;
+    var copy = JSON.parse(JSON.stringify(S.rv.data)); copy.updatedOn = R.iso(today);
+    setStatus(S.rv.key, { review: copy });
+    var s = $('rvSaved'); if (s) s.textContent = S.mode === 'demo' ? 'Example client: kept until you leave the page' : 'Saved';
+  }
+  function rvIn(path, label, o) {
+    o = o || {}; var v = getPath(S.rv.data, path), id = 'rv-' + path.replace(/[^A-Za-z0-9]/g, '_');
+    return '<label class="f" for="' + id + '">' + esc(label) + '<input id="' + id + '" data-rv="' + esc(path) + '" type="text" autocomplete="off"' + (o.num !== false ? ' inputmode="decimal"' : '') +
+      ' value="' + esc(v == null ? '' : v) + '"' + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : '') + '></label>';
+  }
+  function rvArea(path, label, ph) {
+    var v = getPath(S.rv.data, path), id = 'rv-' + path.replace(/[^A-Za-z0-9]/g, '_');
+    return '<label class="f" for="' + id + '" style="flex-basis:100%">' + esc(label) + '<textarea id="' + id + '" data-rv="' + esc(path) + '" style="min-height:80px" placeholder="' + esc(ph || '') + '">' + esc(v || '') + '</textarea></label>';
+  }
+  function rm(n) { return n == null ? '—' : 'RM ' + R.money(n).replace(/\.00$/, ''); }
+  function rvTab1(c) {
+    var h = '<p class="hint">Fill in the cover for each policy, like the Total Protection Planning Record. Leave anything you don’t know blank.</p>';
+    h += c.policies.map(function (p, k) {
+      var pk = R.policyKey(p, k);
+      return '<details' + (k === 0 ? ' open' : '') + '><summary>' + esc((p.policyNo || 'Policy ' + (k + 1)) + (p.plan ? ' · ' + p.plan : '')) + '</summary>' +
+        '<p class="hint" style="margin-top:6px">' + esc([p.status, p.sum != null ? 'SA RM ' + R.money(p.sum) : '', p.perYear != null ? 'RM ' + R.money(p.perYear) + ' a year' : '', p.riders ? 'Riders: ' + p.riders : ''].filter(Boolean).join(' · ')) + '</p>' +
+        '<div class="grid2">' + R.COV.map(function (cd) { return rvIn('cov|' + pk + '|' + cd[0], cd[2], { num: !/maturity|payDate/.test(cd[0]), ph: cd[0] === 'maturity' ? p.maturityYear || '' : '' }); }).join('') + '</div></details>';
+    }).join('');
+    h += '<h4>受益人 Beneficiaries</h4><div class="grid2">' + [0, 1, 2, 3, 4].map(function (n) { return rvIn('bens|' + n, (n + 1) + '.', { num: false, ph: (c.beneficiaries || [])[n] || '' }); }).join('') + '</div>';
+    if ((c.beneficiaries || []).length) h += '<p class="hint">Grey names come from your export and print if you leave all 5 blank.</p>';
+    h += '<h4>Retirement fund / saving 退休金储蓄</h4><div style="display:flex;flex-direction:column;gap:6px">' + [0, 1, 2, 3, 4, 5].map(function (r) {
+      return '<div class="row" style="flex-wrap:nowrap;gap:6px"><span class="hint" style="width:16px">' + (r + 1) + '</span>' + [0, 1, 2].map(function (cc) {
+        var path = 'ret|' + r + '|' + cc, v = getPath(S.rv.data, path);
+        return '<input aria-label="Retirement row ' + (r + 1) + ' column ' + (cc + 1) + '" data-rv="' + path + '" type="text" style="flex:1;min-width:0" value="' + esc(v || '') + '">';
+      }).join('') + '</div>';
+    }).join('') + '</div>';
+    h += rvArea('remark', 'Remark', 'Anything to note for this client');
+    return h;
+  }
+  function rvTab2() {
+    return '<p class="hint">全方面保障计划: the amounts for each need.</p>' + R.PLAN_FIELDS.map(function (g) {
+      return '<h4>' + esc(g[1]) + '</h4><div class="grid2">' + g[2].map(function (fd) { return rvIn('plan|' + fd[0], fd[1], { num: false }); }).join('') + '</div>';
+    }).join('');
+  }
+  function rvTab3() {
+    var inc = R.parseMoney(S.rv.data.income);
+    var h = '<div class="grid2">' + rvIn('income', 'Annual income 年收入 (RM)') + '</div>';
+    h += R.FINGERS.map(function (fd) {
+      var sug = inc != null && fd[3] ? (fd[2] === fd[3] ? rm(inc * fd[2]) : rm(inc * fd[2]) + '–' + rm(inc * fd[3]).replace('RM ', '')) : '';
+      return '<div class="card" style="padding:12px;gap:8px"><b>' + esc(fd[1]) + '</b><span class="hint">' + esc(fd[4]) + (sug ? ' · suggested ' + sug : '') + '</span>' +
+        '<div class="grid2">' + rvIn('fing|' + fd[0] + '|cur', 'Current (RM)') + rvIn('fing|' + fd[0] + '|req', 'Required (RM)') + '</div>' +
+        '<div class="row" style="justify-content:space-between"><span data-calc="gap-' + fd[0] + '" class="pill"></span>' +
+        (sug ? '<button type="button" class="ghost" data-act="rvSuggest" data-f="' + fd[0] + '">Use ' + esc(rm(inc * fd[3])) + ' as required</button>' : '') + '</div></div>';
+    }).join('');
+    return h;
+  }
+  function rvTab4(c) {
+    var perMonth = c.perYear ? c.perYear / 12 : null;
+    var h = '<h4>现金流 Cash flow (per month)</h4><div class="grid2">' + rvIn('cash|income', '收入 Income') + R.CASH.map(function (cd) { return rvIn('cash|' + cd[0], cd[1]); }).join('') + '</div>';
+    if (perMonth) h += '<p class="hint">Premiums on the policies in your export come to about ' + rm(Math.round(perMonth)) + ' a month. <button type="button" class="ghost" data-act="rvIns">Use for 保险</button></p>';
+    h += '<div class="row"><span class="pill due" data-calc="exp"></span><span class="pill" data-calc="surplus"></span></div>';
+    h += '<h4>资产配置 Asset allocation</h4>' + R.ALLOC.map(function (a) { return '<div class="grid2">' + rvIn('alloc|' + a[0] + '|cur', a[1] + ' · Current') + rvIn('alloc|' + a[0] + '|pref', a[1] + ' · Preferred') + '</div>'; }).join('');
+    h += rvArea('assets', '资产 Assets (value goes up, creates income)', 'e.g. investments, property without a loan, life insurance');
+    h += rvArea('liab', '负债 Liabilities (value goes down, no income)', 'e.g. car, house loan, study or personal loans, children, retired parents');
+    return h;
+  }
+  function rvCalc() {
+    if (!S.rv) return;
+    var cc = R.reviewCalc(S.rv.data);
+    R.FINGERS.forEach(function (fd) {
+      var el = document.querySelector('[data-calc="gap-' + fd[0] + '"]'); if (!el) return;
+      var g = cc.fing[fd[0]].gap;
+      el.textContent = g == null ? 'Enter current and required' : (g >= 0 ? 'Surplus ' : 'Shortage ') + rm(Math.abs(g));
+      el.className = 'pill ' + (g == null ? '' : g >= 0 ? 'ok' : 'late');
+    });
+    var ex = document.querySelector('[data-calc="exp"]'), su = document.querySelector('[data-calc="surplus"]');
+    if (ex) ex.textContent = '开销 Expenses ' + rm(cc.expenses);
+    if (su) { su.textContent = '盈余 Surplus ' + (cc.surplus == null ? '—' : (cc.surplus < 0 ? '-' : '') + rm(Math.abs(cc.surplus))); su.className = 'pill ' + (cc.surplus == null ? '' : cc.surplus >= 0 ? 'ok' : 'late'); }
+  }
+  var RV_TABS = [['1', '保障记录'], ['2', '保障计划'], ['3', '财富保障'], ['4', '现金流']];
+  function rvRender() {
+    var c = clientByKey(S.rv.key), t = S.rv.tab;
+    $('rvBody').innerHTML = t === '1' ? rvTab1(c) : t === '2' ? rvTab2() : t === '3' ? rvTab3() : rvTab4(c);
+    setPressed('rvTab', t); rvCalc();
+  }
+  function openReview(key) {
+    var c = clientByKey(key); if (!c) return;
+    var st = statuses()[key] || {};
+    S.rv = { key: key, tab: '1', data: st.review ? JSON.parse(JSON.stringify(st.review)) : {} };
+    openSheet('<h3>Policy review: ' + esc(c.name) + '</h3>' +
+      '<p class="hint">Follows the KST template. Everything you type is saved as you go and prints onto the review PDF in blue. <span id="rvSaved">' + (st.review && st.review.updatedOn ? 'Last updated ' + R.fmtLong(R.fromIso(st.review.updatedOn)) : '') + '</span></p>' +
+      '<div class="seg" role="group" aria-label="Section" style="align-self:flex-start;flex-wrap:wrap">' + RV_TABS.map(function (tb) { return '<button type="button" data-act="rvTab" data-val="' + tb[0] + '" aria-pressed="false">' + tb[0] + '. ' + tb[1] + '</button>'; }).join('') + '</div>' +
+      '<div id="rvBody" style="display:flex;flex-direction:column;gap:10px"></div>' +
+      '<div class="row"><button type="button" class="primary" data-act="rvPdf">Download review PDF</button><button type="button" data-act="close">Done</button></div>');
+    rvRender();
+  }
+  function reviewPdf() {
+    if (!window.jspdf || !window.jspdf.jsPDF) { toast('The PDF maker didn’t load. Check your connection and try again.'); return; }
+    saveReviewNow();
+    var c = clientByKey(S.rv.key), blob, slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    loadAssets().then(function (a) {
+      var doc = R.makePdf(window.jspdf.jsPDF, plan, { items: [{ client: c }], reviews: reviewsMap(), assets: a, sample: S.mode === 'demo' });
+      blob = doc.output('blob');
+      return saveBlob('policy-review-' + slug + '-' + R.iso(today) + '.pdf', blob);
+    }).then(function () { toast('Review PDF saved.'); }, function (err) {
+      if (err && err.code === 'declined') return;
+      if (err && err.code === 'assets') { toast('The template font and pictures didn’t load. Check your connection and try again.'); return; }
+      toast('Saving files isn’t available in this view. Open the app in the Claude app or in a browser on claude.ai.');
+    });
+  }
+
+  /* ---------- Share the app with KST partners on WhatsApp ---------- */
+  /* On claude.ai the app link is the artifact; on its own website it is that site's address. */
+  var STANDALONE = !(window.claude && window.claude.use);
+  var APP_LINK = STANDALONE && /^https?:$/.test(location.protocol) ? location.origin + location.pathname.replace(/index\.html$/, '') : 'https://claude.ai/artifact/9UmQdXCabWtBeb7J6es2wC';
+  /* Saves a file: through claude.ai's save dialog inside Claude, or as a normal browser download on the stand-alone website. */
+  if (STANDALONE && $('privacyNote')) $('privacyNote').textContent = 'Your client list, progress and review worksheets stay in this browser on this device. Nothing is uploaded. Use the same phone or computer each week, and don’t clear this site’s data.';
+  function saveBlob(name, blob) {
+    if (STANDALONE) {
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      return Promise.resolve({ status: 'saved' });
+    }
+    return window.claude.use('downloads').then(function (dl) {
+      if (!dl) throw { code: 'unavailable' };
+      return dl.save({ filename: name, data: blob });
+    });
+  }
+  var SHARE_TEXT = {
+    zh: { label: '华语', text: '伙伴们，我做了一个 Review Before Birthday 小工具 😊\n\n每星期它会列出生日快到（2个月前）的客户，帮你准备英文/马来文 WhatsApp 邀约、预约前3天提醒、生日卡，还有 KST 保单检视表格和 PDF。\n\n打开链接 → 按 Import client list 放进你自己的客户名单就可以开始。你的客户资料只留在你自己的手机和账号里。\n\n链接：' + APP_LINK + '\n\n有问题随时找我！' },
+    en: { label: 'English', text: 'Hi partners, I’ve set up a small tool called Review Before Birthday 😊\n\nEvery week it lists clients whose birthday is 2 months away, drafts English and Malay WhatsApp invitations, reminds you 3 days before each appointment, makes birthday cards, and fills in the KST policy review template as a PDF.\n\nOpen the link and tap Import client list to load your own client list. Your client details stay on your own phone and account.\n\nLink: ' + APP_LINK + '\n\nAsk me anytime if you need help!' }
+  };
+  function openShareApp() {
+    S.share = { lang: 'zh' };
+    var web = waTarget() === 'web';
+    openSheet('<h3>Share the app on WhatsApp</h3>' +
+      '<div class="flag">Partners can only open the link after you turn on sharing: open the app link, tap <b>Share</b> at the top of the page, and add them or allow anyone with the link.</div>' +
+      '<div class="row"><span class="hint">Language</span><div class="seg" role="group">' + Object.keys(SHARE_TEXT).map(function (k) { return '<button type="button" data-act="shareLang" data-val="' + k + '" aria-pressed="' + (k === 'zh') + '">' + SHARE_TEXT[k].label + '</button>'; }).join('') + '</div></div>' +
+      '<label class="f" for="shareMsg">Message (you can edit it)<textarea id="shareMsg" style="min-height:200px">' + esc(SHARE_TEXT.zh.text) + '</textarea></label>' +
+      '<div class="row"><span class="hint">Open in</span><div class="seg" role="group"><button type="button" data-act="shareTarget" data-val="web" aria-pressed="' + web + '">WhatsApp Web</button><button type="button" data-act="shareTarget" data-val="app" aria-pressed="' + !web + '">WhatsApp app</button></div></div>' +
+      '<p class="hint">WhatsApp opens and asks you to pick a chat or group, such as your KST group. Nothing is sent until you press Send.</p>' +
+      '<div class="row"><a class="btn wa" id="shareGo" target="_blank" rel="noopener">Choose chat in WhatsApp</a><button type="button" data-act="shareCopy">Copy message</button><button type="button" data-act="close">Close</button></div>');
+    updateShareLink();
+  }
+  function updateShareLink() {
+    var a = $('shareGo'), t = $('shareMsg'); if (!a || !t) return;
+    var enc = encodeURIComponent(t.value);
+    a.href = waTarget() === 'web' ? 'https://web.whatsapp.com/send?text=' + enc : 'https://wa.me/?text=' + enc;
+    a.textContent = waTarget() === 'web' ? 'Choose chat in WhatsApp Web' : 'Choose chat in WhatsApp';
+  }
+
+  /* ---------- Birthday card ---------- */
+  var CARD_THEMES = {
+    blue: { label: 'Blue', bg: ['#0b2a6f', '#2357e0'], ink: '#ffffff', head: '#ffd166', sub: '#d3defc', bits: ['#ffd166', '#ff8fab', '#8fd3ff', '#ffffff', '#b9f18c'] },
+    gold: { label: 'Gold', bg: ['#fff3d1', '#ffd27a'], ink: '#4a2f00', head: '#b8321f', sub: '#7a5410', bits: ['#c0392b', '#e67e22', '#2e86de', '#ffffff', '#27ae60'] },
+    pink: { label: 'Pink', bg: ['#ffe6ee', '#ffb0c8'], ink: '#5e1430', head: '#c2255c', sub: '#8c3b58', bits: ['#d6336c', '#ffffff', '#ffb703', '#9b5de5', '#00a6d6'] }
+  };
+  var CARD_TEXT = {
+    en: { label: 'English', head: 'Happy Birthday', sign: 'With warm wishes,',
+      wish: 'Wishing you good health, happiness and a wonderful year ahead. Thank you for trusting me to look after you and your family.',
+      wa: function (n) { return 'Happy Birthday, ' + n + '! 🎂 Wishing you good health and happiness in the year ahead. — KS Tan'; } },
+    bm: { label: 'Bahasa Melayu', head: 'Selamat Hari Jadi', sign: 'Salam ikhlas,',
+      wish: 'Semoga sentiasa sihat, bahagia dan dimurahkan rezeki sepanjang tahun. Terima kasih kerana mempercayai saya menjaga anda dan keluarga.',
+      wa: function (n) { return 'Selamat Hari Jadi, ' + n + '! 🎂 Semoga sentiasa sihat dan bahagia. — KS Tan'; } },
+    zh: { label: '华语', head: '生日快乐', sign: '诚挚祝福，',
+      wish: '祝你身体健康、平安喜乐，新的一岁万事如意！谢谢你一直以来的信任，让我守护你和家人。',
+      wa: function (n) { return n + '，生日快乐！🎂 祝你身体健康、平安喜乐，万事如意！— KS Tan'; } }
+  };
+  function loadAssets() {
+    if (S.assets) return Promise.resolve(S.assets);
+    return fetch('rbb-assets.json').then(function (r) { if (!r.ok) throw { code: 'assets' }; return r.json(); }).then(function (a) { S.assets = a; return a; });
+  }
+  var logoImg = null;
+  function cardFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    var want = ['700 120px "Dancing Script"', '800 76px "Plus Jakarta Sans"', '500 44px "Plus Jakarta Sans"', '700 130px "Noto Serif SC"', '500 46px "Noto Serif SC"'];
+    var all = Promise.all(want.map(function (f) { return document.fonts.load(f, f.indexOf('Noto') >= 0 ? '生日快乐祝你' : 'Happy Birthday').catch(function () {}); }));
+    return Promise.race([all, new Promise(function (r) { setTimeout(r, 4000); })]);
+  }
+  function wrapText(x, text, maxW, cjk) {
+    var lines = [], cur = '', units = cjk ? Array.from(text) : text.split(/\s+/);
+    units.forEach(function (u) {
+      var test = cur ? (cjk ? cur + u : cur + ' ' + u) : u;
+      if (x.measureText(test).width > maxW && cur) { lines.push(cur); cur = u; } else cur = test;
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function fitFont(x, text, weight, size, family, maxW) {
+    x.font = weight + ' ' + size + 'px ' + family;
+    while (x.measureText(text).width > maxW && size > 24) { size -= 2; x.font = weight + ' ' + size + 'px ' + family; }
+  }
+  function drawCard(cv) {
+    var o = S.card, Wd = 1080, Ht = 1350, x = cv.getContext('2d'), T = CARD_THEMES[o.theme], L = CARD_TEXT[o.lang];
+    cv.width = Wd; cv.height = Ht;
+    var g = x.createLinearGradient(0, 0, Wd, Ht); g.addColorStop(0, T.bg[0]); g.addColorStop(1, T.bg[1]);
+    x.fillStyle = g; x.fillRect(0, 0, Wd, Ht);
+    var seed = 7; for (var s = 0; s < o.name.length; s++) seed = (seed * 31 + o.name.charCodeAt(s)) % 2147483647;
+    function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    /* confetti across the top and down the sides */
+    for (var i = 0; i < 110; i++) {
+      var px, py;
+      if (i < 75) { px = rnd() * Wd; py = rnd() * 330; } else { px = rnd() < 0.5 ? rnd() * 80 : Wd - rnd() * 80; py = 330 + rnd() * 820; }
+      x.save(); x.translate(px, py); x.rotate(rnd() * Math.PI); x.globalAlpha = 0.85; x.fillStyle = T.bits[Math.floor(rnd() * T.bits.length)];
+      if (rnd() < 0.5) x.fillRect(-6, -14, 12, 28); else { x.beginPath(); x.arc(0, 0, 6 + rnd() * 5, 0, Math.PI * 2); x.fill(); }
+      x.restore();
+    }
+    /* balloons */
+    [[330, 205, 0], [540, 150, 1], [750, 205, 2]].forEach(function (b) {
+      var col = T.bits[b[2]];
+      x.strokeStyle = T.sub; x.lineWidth = 3; x.beginPath(); x.moveTo(b[0], b[1] + 88);
+      x.bezierCurveTo(b[0] - 25, b[1] + 150, b[0] + 25, b[1] + 200, b[0], b[1] + 250); x.stroke();
+      x.fillStyle = col; x.beginPath(); x.ellipse(b[0], b[1], 70, 86, 0, 0, Math.PI * 2); x.fill();
+      x.beginPath(); x.moveTo(b[0] - 10, b[1] + 96); x.lineTo(b[0] + 10, b[1] + 96); x.lineTo(b[0], b[1] + 84); x.fill();
+      x.fillStyle = 'rgba(255,255,255,0.45)'; x.beginPath(); x.ellipse(b[0] - 24, b[1] - 30, 14, 26, -0.5, 0, Math.PI * 2); x.fill();
+    });
+    x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+    var zh = o.lang === 'zh';
+    x.fillStyle = T.head;
+    if (zh) fitFont(x, L.head, 700, 140, '"Noto Serif SC", serif', 900); else fitFont(x, L.head, 700, 132, '"Dancing Script", cursive', 920);
+    x.fillText(L.head, Wd / 2, 545);
+    x.fillStyle = T.ink; fitFont(x, o.name, 800, 76, '"Plus Jakarta Sans", "Noto Serif SC", sans-serif', 920);
+    x.fillText(o.name, Wd / 2, 655);
+    x.fillStyle = T.head; x.fillRect(Wd / 2 - 60, 690, 120, 6);
+    x.fillStyle = T.ink; x.font = zh ? '500 46px "Noto Serif SC", serif' : '500 44px "Plus Jakarta Sans", sans-serif';
+    var lines = wrapText(x, o.wish.trim(), 860, zh).slice(0, 6);
+    lines.forEach(function (l, k) { x.fillText(l, Wd / 2, 780 + k * 64); });
+    var sy = 780 + Math.max(lines.length, 3) * 64 + 50;
+    x.fillStyle = T.sub; x.font = (zh ? '500 38px "Noto Serif SC", serif' : '500 36px "Plus Jakarta Sans", sans-serif'); x.fillText(L.sign, Wd / 2, sy);
+    x.fillStyle = T.ink; x.font = '700 64px "Dancing Script", cursive'; x.fillText('KS Tan', Wd / 2, sy + 70);
+    if (logoImg) {
+      var lw = 210, lh = lw * logoImg.height / logoImg.width, lx = Wd / 2 - lw / 2 - 14, ly = Ht - lh - 58;
+      x.fillStyle = '#ffffff'; x.beginPath(); x.roundRect ? x.roundRect(lx, ly, lw + 28, lh + 20, 18) : x.rect(lx, ly, lw + 28, lh + 20); x.fill();
+      x.drawImage(logoImg, lx + 14, ly + 10, lw, lh);
+    }
+  }
+  function cardItem(key) {
+    for (var i = 0; i < plan.birthdays.length; i++) if (plan.birthdays[i].client.key === key) return plan.birthdays[i];
+    return findItem(key);
+  }
+  function redrawCard() { var cv = $('cardCv'); if (cv && S.card) drawCard(cv); }
+  function openCard(key) {
+    var it = cardItem(key); if (!it) return;
+    var c = it.client, lang = it.lang === 'bm' ? 'bm' : 'en';
+    S.card = { key: key, cycle: it.cycle, lang: lang, theme: 'blue', name: c.callName || c.name.replace(/\s*\((example)\)\s*$/i, ''), wish: CARD_TEXT[lang].wish, wishEdited: false };
+    var demo = S.mode === 'demo';
+    var seg = function (act, obj, cur) { return '<div class="seg" role="group">' + Object.keys(obj).map(function (k) { return '<button type="button" data-act="' + act + '" data-val="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(obj[k].label) + '</button>'; }).join('') + '</div>'; };
+    openSheet('<h3>Birthday card for ' + esc(c.name) + '</h3><p class="hint">Birthday ' + R.fmtDay(it.bday) + '. The card is 1080 × 1350, the right size for WhatsApp.</p>' +
+      '<canvas id="cardCv" width="1080" height="1350" style="width:100%;max-width:340px;align-self:center;border-radius:12px;border:1px solid var(--line)" aria-label="Birthday card preview"></canvas>' +
+      '<div class="row"><span class="hint">Language</span>' + seg('cardLang', CARD_TEXT, lang) + '</div>' +
+      '<div class="row"><span class="hint">Design</span>' + seg('cardTheme', CARD_THEMES, 'blue') + '</div>' +
+      '<label class="f" for="cardName">Name on the card<input id="cardName" type="text" value="' + esc(S.card.name) + '"></label>' +
+      '<label class="f" for="cardWish">Wish<textarea id="cardWish" style="min-height:90px">' + esc(S.card.wish) + '</textarea></label>' +
+      '<div class="row"><button type="button" class="primary" data-act="cardSave">Save card image</button>' +
+      (demo ? '' : '<a class="btn wa" id="cardWa" target="_blank" rel="noopener" data-act="cardOpened"' + (c.phone ? '' : ' hidden') + '>Send wish on WhatsApp</a>') +
+      '<button type="button" data-act="close">Close</button></div>' +
+      (demo ? '<div class="flag">This is an example client, so WhatsApp is turned off. You can still save the card to see how it looks.</div>'
+        : c.phone ? '<p class="hint">WhatsApp can’t attach the picture for you. Save the card first, then attach it in the chat with the + or paperclip button.</p>' : '<div class="flag bad">' + esc(c.phoneErr || 'No mobile number') + '. You can still save the card.</div>') +
+      '<div id="cardAfter" hidden class="card" style="padding:12px"><b>Did you send the card?</b><div class="row"><button type="button" class="primary" data-act="cardSent">Yes, mark card sent</button><button type="button" data-act="close">Not yet</button></div></div>');
+    updateCardWa();
+    logoImg = null;
+    Promise.all([cardFonts(), loadAssets().then(function (a) {
+      return new Promise(function (res) { var im = new Image(); im.onload = function () { logoImg = im; res(); }; im.onerror = function () { res(); }; im.src = a.logo; });
+    }).catch(function () {})]).then(redrawCard);
+    redrawCard();
+  }
+  function updateCardWa() {
+    var a = $('cardWa'), it = S.card && cardItem(S.card.key); if (!a || !it || !it.client.phone) return;
+    var msg = CARD_TEXT[S.card.lang].wa(S.card.name), wa = it.client.phone.wa;
+    a.href = waTarget() === 'web' ? 'https://web.whatsapp.com/send?phone=' + wa + '&text=' + encodeURIComponent(msg) : 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
+  }
+  function setPressed(act, val) { document.querySelectorAll('[data-act="' + act + '"]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.val === val)); }); }
+  function saveCard() {
+    var cv = $('cardCv'); if (!cv) return;
+    var slug = S.card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'client';
+    cv.toBlob(function (blob) {
+      if (!blob) { toast('Couldn’t make the picture. Try again.'); return; }
+      saveBlob('birthday-card-' + slug + '.png', blob).then(function () { toast('Card saved. Attach it in WhatsApp.'); }, function (err) {
+        if (err && err.code === 'declined') return;
+        toast('Saving files isn’t available in this view. Open the app in the Claude app or in a browser on claude.ai.');
+      });
+    }, 'image/png');
+  }
+
+  /* ---------- Import ---------- */
+  var pending = null;
+  $('file').addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    if (!window.XLSX) { toast('The spreadsheet reader didn’t load. Check your connection and try again.'); return; }
+    var rd = new FileReader();
+    rd.onerror = function () { toast('Couldn’t read that file.'); };
+    rd.onload = function () {
+      try {
+        /* raw:true stops CSV text like 03/04/1985 being turned into a US-order date */
+        var wb = XLSX.read(new Uint8Array(rd.result), { type: 'array', cellDates: false, raw: true });
+        startMapping(wb, wb.SheetNames[0], f.name);
+      } catch (err) { toast('That file couldn’t be opened as Excel or CSV.'); }
+    };
+    rd.readAsArrayBuffer(f);
+  });
+  function sheetAoa(wb, name) {
+    /* raw:true keeps dates as Excel serial numbers so day and month never swap */
+    return XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: true, defval: '', blankrows: true });
+  }
+  function startMapping(wb, sheetName, fileName) {
+    var aoa = sheetAoa(wb, sheetName), hIdx = R.findHeaderRow(aoa), headers = (aoa[hIdx] || []).map(function (x) { return String(x).trim(); });
+    var sig = headers.join('|').toLowerCase(), remembered = lsGet('rbb.map');
+    var map = remembered && remembered.sig === sig ? remembered.map : R.guessMapping(headers);
+    pending = { wb: wb, sheetName: sheetName, fileName: fileName, aoa: aoa, headerIdx: hIdx, headers: headers, sig: sig, map: map };
+    var dobCol = map.dob >= 0 ? aoa.slice(hIdx + 1).map(function (r) { return r[map.dob]; }) : [];
+    pending.det = R.detectFormat(dobCol);
+    pending.fmt = remembered && remembered.sig === sig ? remembered.fmt : pending.det.fmt;
+    showMapping();
+  }
+  function mappingPreview() {
+    var b = R.buildClients(pending.aoa, pending.headerIdx, pending.map, pending.fmt, today);
+    var blocked = b.clients.filter(function (c) { return c.blocking.length; }).length;
+    return { n: b.clients.length, rows: b.rows, blocked: blocked + b.rowIssues.length };
+  }
+  function showMapping() {
+    var p = pending, opts = function (sel) { return '<option value="-1">Not in this file</option>' + p.headers.map(function (h, i) { return '<option value="' + i + '"' + (sel === i ? ' selected' : '') + '>' + esc(h || '(column ' + (i + 1) + ')') + '</option>'; }).join(''); };
+    var rows = R.FIELDS.map(function (f) { return '<div class="maprow"><label for="map-' + f.k + '">' + esc(f.label) + (f.req ? ' *' : '') + '</label><select id="map-' + f.k + '" data-field="' + f.k + '">' + opts(p.map[f.k]) + '</select></div>'; }).join('');
+    var det = p.det, detText = det.mixed ? 'This file mixes DD/MM and MM/DD dates. Please check it in the company system.' : det.dmy ? 'Dates look like DD/MM/YYYY.' : det.mdy ? 'Dates look like MM/DD/YYYY.' : det.slashDates ? 'Can’t tell from the file whether dates are DD/MM or MM/DD. Please choose.' : 'Dates are stored as real dates, so the order is clear.';
+    var pv = mappingPreview(), ok = p.map.name >= 0 && (p.map.dob >= 0 || p.map.ic >= 0);
+    openSheet('<h3>Match your columns</h3><p class="hint">' + esc(p.fileName) + (p.wb.SheetNames.length > 1 ? ' · sheet <select id="sheetPick">' + p.wb.SheetNames.map(function (s) { return '<option' + (s === p.sheetName ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>' : '') + ' · headings found on row ' + (p.headerIdx + 1) + '</p>' +
+      '<div style="display:flex;flex-direction:column;gap:8px">' + rows + '</div>' +
+      '<div class="maprow"><label for="fmtPick">Birth date order</label><select id="fmtPick"><option value="DMY"' + (p.fmt === 'DMY' ? ' selected' : '') + '>Day / Month / Year</option><option value="MDY"' + (p.fmt === 'MDY' ? ' selected' : '') + '>Month / Day / Year</option></select></div>' +
+      '<p class="hint">' + esc(detText) + '</p>' +
+      '<div class="banner info"><b>' + pv.n + ' clients from ' + pv.rows + ' rows</b><span>' + (pv.blocked ? pv.blocked + ' need checking (missing or conflicting details). They’ll be listed, not guessed.' : 'All clients have details the app can use.') + '</span></div>' +
+      (ok ? '' : '<div class="flag bad">Choose the client name column, and either date of birth or NRIC.</div>') +
+      '<div class="row"><button type="button" class="primary" data-act="useMap"' + (ok ? '' : ' disabled') + '>Use this list</button><button type="button" data-act="close">Cancel</button></div>');
+  }
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!pending) return;
+    if (t.dataset && t.dataset.field) { pending.map[t.dataset.field] = +t.value; if (t.dataset.field === 'dob') { var col = pending.map.dob >= 0 ? pending.aoa.slice(pending.headerIdx + 1).map(function (r) { return r[pending.map.dob]; }) : []; pending.det = R.detectFormat(col); } showMapping(); }
+    else if (t.id === 'fmtPick') { pending.fmt = t.value; showMapping(); }
+    else if (t.id === 'sheetPick') { startMapping(pending.wb, t.value, pending.fileName); }
+  });
+
+  /* ---------- PDF ---------- */
+  $('pdfBtn').addEventListener('click', function () {
+    if (!window.jspdf || !window.jspdf.jsPDF) { toast('The PDF maker didn’t load. Check your connection and try again.'); return; }
+    var btn = this; btn.disabled = true; btn.textContent = 'Making PDF…';
+    var now = new Date(), gen = R.fmtLong(now) + ', ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    var name = 'review-pack-' + R.iso(today) + (S.mode === 'demo' ? '-example' : '') + '.pdf';
+    var assets = S.assets ? Promise.resolve(S.assets) : fetch('rbb-assets.json').then(function (r) { if (!r.ok) throw { code: 'assets' }; return r.json(); }).then(function (a) { S.assets = a; return a; });
+    var blob;
+    assets.then(function (a) {
+      var doc = R.makePdf(window.jspdf.jsPDF, plan, { sample: S.mode === 'demo', generated: gen, rowIssues: S.data.rowIssues, assets: a, reviews: reviewsMap() });
+      blob = doc.output('blob');
+      return saveBlob(name, blob);
+    }).then(function () { toast('PDF saved.'); }, function (err) {
+      if (err && err.code === 'declined') return;
+      if (err && err.code === 'assets') { toast('The template font and pictures didn’t load. Check your connection and try again.'); return; }
+      toast('Saving files isn’t available in this view. Open the app in the Claude app or in a browser on claude.ai.');
+    }).then(function () { btn.disabled = false; btn.textContent = 'Download this week’s PDF'; });
+  });
+  $('helpBtn').addEventListener('click', function () { var d = $('help'); d.open = true; d.scrollIntoView({ behavior: 'smooth' }); });
+
+  /* ---------- Actions ---------- */
+  document.addEventListener('input', function (e) {
+    var t = e.target; if (t.dataset && t.dataset.draft) S.drafts[t.dataset.draft] = t.value;
+    if (t.id === 'shareMsg') updateShareLink();
+    if (S.rv && t.dataset && t.dataset.rv) { setPath(S.rv.data, t.dataset.rv, t.value); rvCalc(); saveReviewSoon(); }
+    if (S.card && t.id === 'cardName') { S.card.name = t.value; updateCardWa(); redrawCard(); }
+    if (S.card && t.id === 'cardWish') { S.card.wish = t.value; S.card.wishEdited = true; redrawCard(); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('sheetRoot').innerHTML) { if (S.rv) { saveReviewNow(); S.rv = null; } closeSheet(); } });
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-act]'); if (!el) return;
+    var act = el.dataset.act, key = el.dataset.key;
+    if (act === 'closebg') { if (e.target === el) { if (S.rv) { saveReviewNow(); S.rv = null; } closeSheet(); } return; }
+    if (act === 'close') { if (S.rv) { saveReviewNow(); S.rv = null; } closeSheet(); pending = null; return; }
+    if (act === 'lang') { S.langPick[key] = el.dataset.lang; var it = findItem(key); if (it) setStatus(key, { cycle: it.cycle, lang: el.dataset.lang }); else render(); return; }
+    if (act === 'send') { openSend(key, el.dataset.type); return; }
+    if (act === 'shareApp') { openShareApp(); return; }
+    if (act === 'shareLang') { $('shareMsg').value = SHARE_TEXT[el.dataset.val].text; setPressed('shareLang', el.dataset.val); updateShareLink(); return; }
+    if (act === 'shareTarget') { S.waPref = el.dataset.val; lsSet('rbb.wa', el.dataset.val); setPressed('shareTarget', el.dataset.val); updateShareLink(); return; }
+    if (act === 'shareCopy') {
+      var st = $('shareMsg'); st.select();
+      try { navigator.clipboard.writeText(st.value).then(function () { toast('Message copied.'); }, function () { toast('Copy isn’t allowed here. The message is selected, so copy it yourself.'); }); }
+      catch (er) { toast('Copy isn’t allowed here. The message is selected, so copy it yourself.'); }
+      return;
+    }
+    if (act === 'review') { openReview(key); return; }
+    if (act === 'rvTab') { S.rv.tab = el.dataset.val; rvRender(); var sh = $('sheetRoot').querySelector('.sheet'); if (sh) sh.scrollTop = 0; return; }
+    if (act === 'rvPdf') { reviewPdf(); return; }
+    if (act === 'rvSuggest') {
+      var fd = R.FINGERS.filter(function (x) { return x[0] === el.dataset.f; })[0], inc = R.parseMoney(S.rv.data.income);
+      if (fd && inc != null) { setPath(S.rv.data, 'fing|' + fd[0] + '|req', String(Math.round(inc * fd[3]))); rvRender(); saveReviewSoon(); }
+      return;
+    }
+    if (act === 'rvIns') { var cl = clientByKey(S.rv.key); setPath(S.rv.data, 'cash|insurance', String(Math.round(cl.perYear / 12))); rvRender(); saveReviewSoon(); return; }
+    if (act === 'card') { openCard(key); return; }
+    if (act === 'cardLang') { var lg = el.dataset.val; if (!S.card.wishEdited) { S.card.wish = CARD_TEXT[lg].wish; $('cardWish').value = S.card.wish; } S.card.lang = lg; setPressed('cardLang', lg); updateCardWa(); redrawCard(); return; }
+    if (act === 'cardTheme') { S.card.theme = el.dataset.val; setPressed('cardTheme', el.dataset.val); redrawCard(); return; }
+    if (act === 'cardSave') { saveCard(); return; }
+    if (act === 'cardOpened') { setTimeout(function () { var a = $('cardAfter'); if (a) a.hidden = false; }, 300); return; }
+    if (act === 'cardSent') { setStatus(S.card.key, { cardFor: S.card.cycle }); closeSheet(); toast('Birthday card marked as sent.'); return; }
+    if (act === 'waTarget') { S.waPref = el.dataset.val; lsSet('rbb.wa', el.dataset.val); if (S.lastSend) openSend(S.lastSend.key, S.lastSend.type); return; }
+    if (act === 'opened') { setTimeout(function () { var a = $('afterOpen'); if (a) a.hidden = false; }, 300); return; }
+    if (act === 'copy') {
+      var txt = $('sheetRoot').querySelector('.sheet').dataset.msg;
+      try { navigator.clipboard.writeText(txt).then(function () { toast('Message copied.'); }, function () { toast('Copy isn’t allowed here. Select the message text and copy it.'); }); }
+      catch (er) { toast('Copy isn’t allowed here. Select the message text and copy it.'); }
+      return;
+    }
+    if (act === 'sent') {
+      var item = findItem(key); if (!item) return;
+      if (el.dataset.type === 'invite') setStatus(key, { cycle: item.cycle, invitedOn: R.iso(today), lang: el.dataset.lang });
+      else setStatus(key, { remindedOn: R.iso(today) });
+      closeSheet(); toast(el.dataset.type === 'invite' ? 'Marked as invited. Enter the appointment when they reply.' : 'Reminder marked as sent.'); return;
+    }
+    if (act === 'appt') {
+      var d = $('ad-' + key).value, t = $('at-' + key).value, p = $('ap-' + key).value.trim(), it2 = findItem(key);
+      if (!d || !t) { toast('Enter both the date and the time.'); return; }
+      if (d < R.iso(today)) { toast('That date has already passed.'); return; }
+      var changed = !it2.st.appt || it2.st.appt !== d + 'T' + t;
+      setStatus(key, { cycle: it2.cycle, appt: d + 'T' + t, apptPlace: p || null, remindedOn: changed ? null : it2.st.remindedOn });
+      toast('Appointment saved. Reminder lined up for ' + R.fmtDay(R.addDays(R.fromIso(d), -3)) + '.'); return;
+    }
+    if (act === 'change') { var box = $('chg-' + key); if (box) box.hidden = !box.hidden; return; }
+    if (act === 'done') { confirmSheet('Mark review done?', 'This moves ' + esc(findItem(key).client.name) + ' off this year’s list. They’ll come back before next year’s birthday.', 'doneYes', key, 'Mark done'); return; }
+    if (act === 'doneYes') { setStatus(key, { reviewedOn: R.iso(today) }); closeSheet(); toast('Review marked done.'); return; }
+    if (act === 'skip') { var it3 = findItem(key); confirmSheet('Skip this year?', esc(it3.client.name) + ' won’t get an invitation for the ' + R.fmtLong(it3.bday) + ' birthday. They’ll come back next year.', 'skipYes', key, 'Skip this year'); return; }
+    if (act === 'skipYes') { var it4 = findItem(key); setStatus(key, { cycle: it4.cycle, skip: true }); closeSheet(); toast('Skipped for this year.'); return; }
+    if (act === 'uninvite') { setStatus(key, { invitedOn: null }); toast('Moved back to Review and invite.'); return; }
+    if (act === 'useMap') {
+      var p2 = pending, src = { aoa: p2.aoa, headerIdx: p2.headerIdx, map: p2.map, fmt: p2.fmt, fileName: p2.fileName, importedOn: R.iso(today) };
+      lsSet('rbb.map', { sig: p2.sig, map: p2.map, fmt: p2.fmt });
+      if (!lsSet('rbb.list', src)) toast('List loaded, but this browser won’t keep it. You’ll need to import again next time.');
+      S.mode = 'live'; S.data = build(src); pending = null; closeSheet(); render(); window.scrollTo(0, 0);
+      toast(S.data.clients.length + ' clients loaded.'); return;
+    }
+    if (act === 'clear') { confirmSheet('Remove the imported list?', 'This removes your client list from this device. Your progress (who was invited, appointments) stays saved. You can import again any time.', 'clearYes', '', 'Remove list'); return; }
+    if (act === 'clearYes') { lsDel('rbb.list'); loadDemo(); closeSheet(); render(); toast('Imported list removed from this device.'); return; }
+  });
+  render();
+})();
+</script>
+
+</body>
+</html>
